@@ -1,4 +1,7 @@
 using AuthService.Api.Extensions;
+using AuthService.Api.Middleware;
+using AuthService.Application.Interfaces;
+using AuthService.Application.Services;
 using AuthService.Domain.Entities;
 using AuthService.Infrastructure.Seed;
 using Microsoft.AspNetCore.Identity;
@@ -12,15 +15,19 @@ namespace AuthService.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-
-            // додаемо в DI - бд та identity
+      
             builder.Services.AddAuthDatabase(builder.Configuration);
-
+            builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+            builder.Services.AddScoped<IAuthInterface, AuthUserService>();
+       
 
             builder.Services.AddControllers();
 
 
-            var app = builder.Build();     
+            var app = builder.Build(); 
+            
+            app.UseMiddleware<RequestLoggingMiddleware>();
+            app.UseMiddleware<GlobalExceptionMiddleware>();
 
             app.UseHttpsRedirection();
 

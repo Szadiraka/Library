@@ -1,8 +1,10 @@
-﻿using System;
+﻿using AuthService.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace AuthService.Application.DTOs
@@ -38,13 +40,14 @@ namespace AuthService.Application.DTOs
         [StringLength(50)]
         public string LastName { get; set; } = string.Empty;
 
-        [Required]
-        [DataType(DataType.Date)]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         [Range(typeof(DateTime), "1900-01-01", "2025-01-01", ErrorMessage ="Invalid birth date")]
         public DateTime? BirthDate { get; set; }
 
         public string? AvatarUrl { get; set; }
+
+
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public UserRoles Role { get; set; } = UserRoles.User;
     }
 }
