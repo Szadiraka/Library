@@ -1,5 +1,10 @@
 ﻿using AuthService.Application.DTOs;
+using AuthService.Domain.Exceptions;
+using Microsoft.IdentityModel.Tokens;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Reflection.Metadata.Ecma335;
+using System.Security.Authentication;
 using System.Text.Json;
 
 namespace AuthService.Api.Middleware
@@ -23,11 +28,21 @@ namespace AuthService.Api.Middleware
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Hеопрацьована помилка");
-                
+                _logger.LogError(ex, "Hеопрацьована помилка для запиту {Method} {Pass}",context.Request.Method, context.Request.Path);
+
+                var statusCode = MapExceptionToStatusCode(ex);
+
+                if (context.Response.HasStarted)
+                {
+                    _logger.LogWarning("Відповідь вже розпочата, використання відповіді не можливе.");
+                    throw;
+                }
+
+                context.Response.Clear();
                 context.Response.ContentType = "application/json";
-                context.Response.StatusCode = (int) HttpStatusCode.BadRequest;
-                var response = new ApiResponse { Message = ex.Message };
+                context.Response.StatusCode = statusCode;
+
+                var response = new ApiResponse { Message = GetClientMessage(ex) };
 
                 var json = JsonSerializer.Serialize(response);
 
@@ -35,6 +50,48 @@ namespace AuthService.Api.Middleware
 
 
             }
+        }
+
+
+
+        private static int MapExceptionToStatusCode(Exception ex)
+        {
+
+            var result = ex switch
+            {
+     
+                NotFoundException _ => HttpStatusCode.NotFound,
+                ValidationException _ => HttpStatusCode.BadRequest,
+                ConflictException _=> HttpStatusCode.Conflict,
+                UnauthorizedException _ => HttpStatusCode.Unauthorized,
+                ForbiddenException _ => HttpStatusCode.Forbidden,
+                BusinessRuleException _ => HttpStatusCode.UnprocessableEntity,         
+
+                _ => HttpStatusCode.InternalServerError,
+
+              
+            };
+            return (int) result;
+
+        }
+
+
+        private static string GetClientMessage(Exception ex)
+        {
+
+            return ex switch
+            {               
+
+                NotFoundException vex => vex.Message,
+                ConflictException vex => vex.Message,
+                ValidationException vex => vex.Message,
+                ForbiddenException vex => vex.Message,
+                UnauthorizedException vex => vex.Message,              
+                BusinessRuleException vex => vex.Message,       
+
+                _ => "Сталася неочікувана помилка"
+
+            };
         }
 
     }

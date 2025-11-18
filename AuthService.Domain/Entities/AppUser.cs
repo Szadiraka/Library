@@ -16,6 +16,11 @@ namespace AuthService.Domain.Entities
 
         public string? AvatarUrl { get; set; }
 
+
+        public string RefreshToken { get; set; } = string.Empty;  //токен для оновлення jwt-токену
+
+        public DateTime? RefreshTokenExpiryTime { get; set; }  // дата актуальності цього токена
+
         
     }
 }

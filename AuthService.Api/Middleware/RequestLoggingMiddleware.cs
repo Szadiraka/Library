@@ -1,4 +1,6 @@
-﻿namespace AuthService.Api.Middleware
+﻿using System.Diagnostics;
+
+namespace AuthService.Api.Middleware
 {
     public class RequestLoggingMiddleware
     {
@@ -15,11 +17,15 @@
 
         public async Task InvokeAsync(HttpContext context)
         {
+            var sw = Stopwatch.StartNew();
             _logger.LogInformation("HTTP {Method} {Path} started", context.Request.Method, context.Request.Path);
 
             await _next(context);
 
-            _logger.LogInformation("HTTP {Method} {Path} finished with status {StatusCode}", context.Request.Method, context.Request.Path, context.Response.StatusCode);
+            sw.Stop();
+
+            _logger.LogInformation("HTTP {Method} {Path} finished with status {StatusCode} in {Elapsed} ms",
+                context.Request.Method, context.Request.Path, context.Response.StatusCode, sw.ElapsedMilliseconds);
         }
 
     }

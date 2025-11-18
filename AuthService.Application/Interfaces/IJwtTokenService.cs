@@ -10,5 +10,11 @@ namespace AuthService.Application.Interfaces
     public interface IJwtTokenService
     {
         string GenerateToken(AppUser user, IList<string> roles);
+
+        string GenerateRefreshToken();
+
+        public int TokenExpirationInMinutes();
+
+        public int RefreshTokenExpirationInDays();
     }
 }

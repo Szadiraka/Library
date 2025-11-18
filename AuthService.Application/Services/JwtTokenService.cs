@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 
@@ -11,7 +12,19 @@ namespace AuthService.Application.Services
 {
     public class JwtTokenService(IConfiguration configuration) : IJwtTokenService
     {
-       
+        public string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+
+            using var rng = RandomNumberGenerator.Create();
+            
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            
+        }
+
+
+
         public string GenerateToken(AppUser user, IList<string> roles)
         {
 
@@ -35,18 +48,37 @@ namespace AuthService.Application.Services
            
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var experies = int.TryParse(configuration["Jwt:ExpirationInHours"], out var h);
-
              var token = new JwtSecurityToken(
                  issuer: configuration["Jwt:Issuer"],
                  audience: configuration["Jwt:Audience"],
                  claims: claims,
-                 expires: DateTime.UtcNow.AddHours(h),
+                 expires: DateTime.UtcNow.AddMinutes(TokenExpirationInMinutes()),
                  signingCredentials: credentials
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
 
+        }
+
+
+        public int TokenExpirationInMinutes()
+        {
+            var experies = int.TryParse(configuration["Jwt:TokenExpirationInMinutes"], out var minutes);
+            if (!experies)
+            {
+                minutes = 15;
+            }
+            return minutes;
+        }
+
+        public int RefreshTokenExpirationInDays()
+        {
+            var experies = int.TryParse(configuration["Jwt:RefreshTokenExpirationInDays"], out var days);
+            if (!experies)
+            {
+                days = 7;
+            }
+            return days;
         }
     }
 }

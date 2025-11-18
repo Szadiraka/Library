@@ -36,5 +36,13 @@ namespace AuthService.Api.Controllers
             
            
         }
+
+
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest request)
+        {
+            var response = await _service.RefreshTokenAsync(request.Token, request.RefreshToken);
+            return Ok(new ApiResponse {Message = "токен успішно оновлено", Data = response });
+        }
     }
 }

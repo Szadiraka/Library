@@ -22,6 +22,7 @@ namespace AuthService.Application.Mapper
                 BirthDate = user.BirthDate,
                 AvatarUrl = user.AvatarUrl,
                 CreatedAt = DateTime.UtcNow,
+                
             };
         }
 

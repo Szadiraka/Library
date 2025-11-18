@@ -13,24 +13,28 @@ namespace AuthService.Api
     {
         public static async Task Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
-
-      
-            builder.Services.AddAuthDatabase(builder.Configuration);
-            builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
-            builder.Services.AddScoped<IAuthInterface, AuthUserService>();
+            var builder = WebApplication.CreateBuilder(args);     
        
 
             builder.Services.AddControllers();
+            builder.Services.AddAuthentication();
+            builder.Services.AddAuthorization();
 
 
-            var app = builder.Build(); 
-            
-            app.UseMiddleware<RequestLoggingMiddleware>();
+            builder.Services.AddAuthDatabase(builder.Configuration);
+            builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+            builder.Services.AddScoped<IAuthInterface, AuthUserService>();
+
+
+            var app = builder.Build();
             app.UseMiddleware<GlobalExceptionMiddleware>();
+
+            app.UseMiddleware<RequestLoggingMiddleware>();
+        
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
         
 
