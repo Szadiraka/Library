@@ -2,13 +2,22 @@
 using AuthService.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AuthService.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController(IAuthInterface _service) : ControllerBase
+    public class AuthController : ControllerBase
     {
+        private readonly IAuthInterface _service;    
+
+
+        public AuthController(IAuthInterface service)
+        {
+            _service = service;
+          
+        }
       
 
         [HttpPost("register")]
@@ -44,5 +53,7 @@ namespace AuthService.Api.Controllers
             var response = await _service.RefreshTokenAsync(request.Token, request.RefreshToken);
             return Ok(new ApiResponse {Message = "токен успішно оновлено", Data = response });
         }
+
+       
     }
 }

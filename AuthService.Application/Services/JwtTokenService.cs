@@ -10,8 +10,43 @@ using System.Text;
 
 namespace AuthService.Application.Services
 {
-    public class JwtTokenService(IConfiguration configuration) : IJwtTokenService
+    public class JwtTokenService : IJwtTokenService
     {
+        private readonly IConfiguration _configuration;         
+
+        public JwtTokenService(IConfiguration configuration)
+        {
+                _configuration = configuration;          
+
+        }
+
+        public int TokenExpiration {
+            get
+            {
+                var result = int.TryParse(_configuration["Jwt:TokenExpirationInMinutes"], out var minutes);
+                if (!result)
+                {
+                    minutes = 15;
+                }
+                return minutes;
+            }
+        }
+
+        public int RefreshTokenExpiration
+        {
+            get
+            {
+                var result = int.TryParse(_configuration["Jwt:RefreshTokenExpirationInDays"], out var days);
+                if (!result)
+                {
+                    days = 7;
+                }
+                return days;
+            }
+        }
+
+
+
         public string GenerateRefreshToken()
         {
             var randomNumber = new byte[32];
@@ -40,19 +75,18 @@ namespace AuthService.Application.Services
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
+            var keyString = _configuration["Jwt:Key"];         
 
 
-            var keyString = configuration["Jwt:Key"];
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyString!));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyString));
            
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
              var token = new JwtSecurityToken(
-                 issuer: configuration["Jwt:Issuer"],
-                 audience: configuration["Jwt:Audience"],
+                 issuer: _configuration["Jwt:Issuer"],
+                 audience: _configuration["Jwt:Audience"],
                  claims: claims,
-                 expires: DateTime.UtcNow.AddMinutes(TokenExpirationInMinutes()),
+                 expires: DateTime.UtcNow.AddMinutes(TokenExpiration),
                  signingCredentials: credentials
             );
 
@@ -61,24 +95,6 @@ namespace AuthService.Application.Services
         }
 
 
-        public int TokenExpirationInMinutes()
-        {
-            var experies = int.TryParse(configuration["Jwt:TokenExpirationInMinutes"], out var minutes);
-            if (!experies)
-            {
-                minutes = 15;
-            }
-            return minutes;
-        }
-
-        public int RefreshTokenExpirationInDays()
-        {
-            var experies = int.TryParse(configuration["Jwt:RefreshTokenExpirationInDays"], out var days);
-            if (!experies)
-            {
-                days = 7;
-            }
-            return days;
-        }
+      
     }
 }

@@ -13,8 +13,10 @@ namespace AuthService.Application.Interfaces
 
         string GenerateRefreshToken();
 
-        public int TokenExpirationInMinutes();
+        public int TokenExpiration { get; }
 
-        public int RefreshTokenExpirationInDays();
+        public int RefreshTokenExpiration { get; }
+
+
     }
 }

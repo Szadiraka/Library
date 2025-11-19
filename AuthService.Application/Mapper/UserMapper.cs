@@ -26,9 +26,9 @@ namespace AuthService.Application.Mapper
             };
         }
 
-        public static UserDto ToUserDto(AppUser user)
+        public static UserDto ToUserDto(AppUser user, IList<string>? roles = null)
         {
-            return new UserDto
+            var userDto = new UserDto
             {
                 Id = user.Id,
                 UserName = user.UserName ?? string.Empty,
@@ -37,9 +37,14 @@ namespace AuthService.Application.Mapper
                 LastName = user.LastName,
                 BirthDate = user.BirthDate,
                 AvatarUrl = user.AvatarUrl,
-                CreatedAt = user.CreatedAt,
+                CreatedAt = user.CreatedAt,                
                
             };
+            if (roles != null)
+            {
+                userDto.Roles = roles.ToList();
+            }
+            return userDto;
         }
 
     };

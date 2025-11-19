@@ -1,10 +1,7 @@
 ﻿using AuthService.Application.DTOs;
 using AuthService.Domain.Exceptions;
-using Microsoft.IdentityModel.Tokens;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
-using System.Reflection.Metadata.Ecma335;
-using System.Security.Authentication;
 using System.Text.Json;
 
 namespace AuthService.Api.Middleware
@@ -28,7 +25,7 @@ namespace AuthService.Api.Middleware
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Hеопрацьована помилка для запиту {Method} {Pass}",context.Request.Method, context.Request.Path);
+                _logger.LogWarning("Помилка для запиту {Method} {Pass} Mistake:{}",context.Request.Method, context.Request.Path, ex.Message);
 
                 var statusCode = MapExceptionToStatusCode(ex);
 

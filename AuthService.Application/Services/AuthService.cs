@@ -2,27 +2,26 @@
 using AuthService.Application.Interfaces;
 using AuthService.Application.Mapper;
 using AuthService.Domain.Entities;
-using AuthService.Domain.Enums;
 using AuthService.Domain.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System.ComponentModel.DataAnnotations;
 
 
 
 namespace AuthService.Application.Services
 {
-    public class AuthUserService : IAuthInterface
+    public class _AuthService : IAuthInterface
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IJwtTokenService _jwtTokenService;
+      
 
-        public AuthUserService(UserManager<AppUser> userManager, IJwtTokenService jwtTokenService)
+        public _AuthService(UserManager<AppUser> userManager, IJwtTokenService jwtTokenService)
         {
             _userManager = userManager;
 
             _jwtTokenService = jwtTokenService;
+            
 
         }
 
@@ -79,9 +78,7 @@ namespace AuthService.Application.Services
             if (user == null)
                 throw new UnauthorizedException("невалідний refresh токен");
             if (user.RefreshTokenExpiryTime <= DateTime.UtcNow)
-
                 throw new UnauthorizedException("refresh токен просрочении");
-
 
             return await GenenerateAndSaveTokens(user);          
 
@@ -98,7 +95,8 @@ namespace AuthService.Application.Services
             var refreshToken = _jwtTokenService.GenerateRefreshToken();
 
             user.RefreshToken = refreshToken;
-            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(_jwtTokenService.RefreshTokenExpirationInDays());
+            
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(_jwtTokenService.RefreshTokenExpiration);
 
             var updateResult = await _userManager.UpdateAsync(user);
 
@@ -109,9 +107,12 @@ namespace AuthService.Application.Services
             {
                 Token = token,
                 RefreshToken = refreshToken,
-                Expiration = DateTime.UtcNow.AddMinutes(_jwtTokenService.TokenExpirationInMinutes())
+                Expiration = DateTime.UtcNow.AddMinutes(_jwtTokenService.TokenExpiration)
             };
 
         }
+    
+    
+       
     }
 }

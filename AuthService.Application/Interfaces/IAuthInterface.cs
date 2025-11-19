@@ -11,5 +11,7 @@ namespace AuthService.Application.Interfaces
         Task<AuthResponseDto> LoginAsync(LoginDto loginDto);
 
         Task<AuthResponseDto> RefreshTokenAsync(string token, string refreshToken);
+
+       
     }
 }
