@@ -1,4 +1,5 @@
-﻿using AuthService.Domain.Entities;
+﻿using AuthService.Application.DTOs;
+using AuthService.Domain.Entities;
 using AuthService.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -8,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Tokens.Experimental;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 
 namespace AuthService.Api.Extensions
 {
@@ -55,8 +57,39 @@ namespace AuthService.Api.Extensions
 
                      };
 
+                     // добавляем обработку ошибок
+                     options.Events = new JwtBearerEvents
+                     {
+                         OnAuthenticationFailed = context =>
+                         {
+                             context.Response.StatusCode = 401;
+                             context.Response.ContentType = "application/json";
+                             var result = JsonSerializer.Serialize(new
+                                ApiResponse
+                             { Message = "Помилка аутентифікації" });
+                             return context.Response.WriteAsync(result);
+                         },
 
-
+                         OnChallenge = context =>
+                         {
+                             context.HandleResponse();
+                             context.Response.StatusCode = 401;
+                             context.Response.ContentType = "application/json";
+                             var result = JsonSerializer.Serialize(new
+                                ApiResponse
+                             { Message = "Потрібна авторизація" });
+                             return context.Response.WriteAsync(result);
+                         },
+                         OnForbidden = context =>
+                         {
+                             context.Response.StatusCode = 403;
+                             context.Response.ContentType = "application/json";
+                             var result = JsonSerializer.Serialize(new
+                                ApiResponse
+                             { Message = "Доступ заборонено" });
+                             return context.Response.WriteAsync(result);
+                         }
+                     };
 
                  });
 

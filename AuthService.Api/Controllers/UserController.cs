@@ -31,7 +31,6 @@ namespace AuthService.Api.Controllers
         {
             var userId = _userContextService.UserId;
          
-            Console.WriteLine(userId);
             var user = await _userService.GetUserByIdAsync(userId);
 
             return Ok(new ApiResponse { Message = "ok", Data = user });

@@ -4,7 +4,12 @@ using AuthService.Application.Mapper;
 using AuthService.Domain.Entities;
 using AuthService.Domain.Exceptions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.ComponentModel.DataAnnotations;
+using System.Data;
+using System.Text;
 
 
 
@@ -14,15 +19,18 @@ namespace AuthService.Application.Services
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IJwtTokenService _jwtTokenService;
-      
+        private readonly IEmailService _emailService;
+        private readonly IConfiguration _configuration;
 
-        public _AuthService(UserManager<AppUser> userManager, IJwtTokenService jwtTokenService)
+        public _AuthService(UserManager<AppUser> userManager, IJwtTokenService jwtTokenService,
+            IConfiguration configuration, IEmailService emailService)
         {
             _userManager = userManager;
 
             _jwtTokenService = jwtTokenService;
             
-
+            _emailService = emailService;
+            _configuration = configuration;
         }
 
 
@@ -111,8 +119,111 @@ namespace AuthService.Application.Services
             };
 
         }
-    
-    
-       
+
+
+        public async Task LogoutAsync(string? userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+                throw new UnauthorizedException("Користувач не авторизований");
+
+            var user =await  _userManager.FindByIdAsync(userId);
+            if (user == null)
+                throw new NotFoundException("Користувача не знайдено");
+
+            user.RefreshToken = string.Empty;
+            user.RefreshTokenExpiryTime = null;
+
+            var result =await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+                throw new BusinessRuleException("Не вдалось збросити refresh токен");
+        }
+
+        //---------------
+
+        public async Task SendEmailConfirmationAsync(string? userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+                throw new UnauthorizedException("Користувач не авторизований");
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if(user == null) 
+                throw new NotFoundException("Користувача не знайдено");
+
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+
+            //повертаємо на почту користувача посилання для підтвердження
+            var confirmationLink = $"{_configuration["Client:Url_Server"]}/api/auth/confirm-email?userId={user.Id}&token={encodedToken}";
+
+            await _emailService.SendEmailConfirmationAsync(user.Email!, confirmationLink);
+        }
+
+
+        public async Task<ConfirmEmailResponseDto> ConfirmEmailAsync(string userId, string token)
+        {
+           var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                throw new NotFoundException("Користувача не знайдено");
+
+         
+                var decodedToken = WebEncoders.Base64UrlDecode(token);
+
+                var normalToken = Encoding.UTF8.GetString(decodedToken);
+
+                var result = await _userManager.ConfirmEmailAsync(user, normalToken);
+
+            if (!result.Succeeded)
+            {
+                await _emailService.SendEmailAsync(user.Email!,"Не вдалося підтвердити email. Токен недійсний або прострочений.");
+                throw new BusinessRuleException("Недійсний або просрочений токен");
+            }
+            string msg = "Вашу почту підтверджено";
+            await _emailService.SendEmailAsync(user.Email!, msg);
+            return new ConfirmEmailResponseDto(){ Message=msg};
+           
+
+        }
+
+        //---------------
+
+        public async Task ForgotPasswordAsync(string email)
+        {
+            var user = await _userManager.FindByIdAsync(email);
+
+            if (user == null)
+                return;
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+
+            //повертаємо  на UI- посилання для генерації нового пароля
+            var resetLink = $"{_configuration["Client:Url_Client"]}/reset-password?userId={user.Id}&token={encodedToken}";
+
+            await _emailService.SendEmailAsync(email, $"Для відновлення пароля перейдіть за посиланням: {resetLink}");
+        }
+
+        public async Task ResetPasswordAsync(ResetPasswordDto dto)
+        {
+           var user = await _userManager.FindByIdAsync(dto.UserId);
+
+            if (user == null)
+                throw new NotFoundException("Користувача не знайдено");
+
+            var decodeToken = WebEncoders.Base64UrlDecode(dto.Token);
+            var normalToken = Encoding.UTF8.GetString(decodeToken);
+
+            var result = await _userManager.ResetPasswordAsync(user, normalToken, dto.NewPassword);
+
+            if (!result.Succeeded)
+            {
+                throw new BusinessRuleException("Не вдалося скинути пароль");
+            }
+
+            await _emailService.SendEmailAsync(user.Email, "Пароль було успішно змінено");
+               
+
+
+        }
     }
 }

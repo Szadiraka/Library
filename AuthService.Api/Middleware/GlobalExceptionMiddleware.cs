@@ -58,7 +58,7 @@ namespace AuthService.Api.Middleware
             {
      
                 NotFoundException _ => HttpStatusCode.NotFound,
-                ValidationException _ => HttpStatusCode.BadRequest,
+                _ValidationException _ => HttpStatusCode.BadRequest,
                 ConflictException _=> HttpStatusCode.Conflict,
                 UnauthorizedException _ => HttpStatusCode.Unauthorized,
                 ForbiddenException _ => HttpStatusCode.Forbidden,
@@ -81,7 +81,7 @@ namespace AuthService.Api.Middleware
 
                 NotFoundException vex => vex.Message,
                 ConflictException vex => vex.Message,
-                ValidationException vex => vex.Message,
+                _ValidationException vex => vex.Message,
                 ForbiddenException vex => vex.Message,
                 UnauthorizedException vex => vex.Message,              
                 BusinessRuleException vex => vex.Message,       
