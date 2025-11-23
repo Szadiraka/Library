@@ -4,6 +4,7 @@ using AuthService.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration.UserSecrets;
 using System.Security.Claims;
 
 namespace AuthService.Api.Controllers
@@ -57,8 +58,10 @@ namespace AuthService.Api.Controllers
             return Ok(new ApiResponse { Message = "токен успішно оновлено", Data = response });
         }
 
-        [HttpPost("logout")]
+
         [Authorize]
+        [HttpPost("logout")]
+   
         public async Task<IActionResult> Logout()
         {
             var userId = _contextService.UserId;
@@ -70,6 +73,8 @@ namespace AuthService.Api.Controllers
 
 
         //-------------------------------------------------------
+
+        //метод не проверен
         [Authorize]
         [HttpPost("send-confirmation-email")]
         public async Task<IActionResult> SendEmailConfirmation()
@@ -80,8 +85,10 @@ namespace AuthService.Api.Controllers
             return Ok(new ApiResponse { Message = "Підтвердження відправлене на email" });
         }
 
-        [HttpGet("confirm-email")]
+
         [AllowAnonymous]
+        [HttpGet("confirm-email")]
+   
         public async Task<IActionResult> ConfirmEmail([FromQuery] ConfirmEmailRequestDto request)
         {
             var result = await _authService.ConfirmEmailAsync(request.UserId, request.Token);
@@ -92,11 +99,10 @@ namespace AuthService.Api.Controllers
         //-------------------------------------------------------
 
 
+        //метод не проверен
 
-
-
-        [HttpPost("forgot-password")]
         [AllowAnonymous]
+        [HttpPost("forgot-password")]     
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
         {
             await _authService.ForgotPasswordAsync(dto.Email);
@@ -111,7 +117,66 @@ namespace AuthService.Api.Controllers
             return Ok(new ApiResponse { Message = "Ваш пароль було успішно змінено" });
         }
 
+        //------------------------------------------------------------------
 
+        // не проверен
+
+        [Authorize]
+        [HttpPut("change-password")]  
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
+        {
+            var userId = _contextService.UserId;
+            await _authService.ChangePasswordAsync(userId, dto);
+            return Ok(new ApiResponse { Message = "Ваш пароль було успішно змінено" });
+        }
+
+        //не перевірен
+
+        [Authorize]
+        [HttpPost("change-email-request")]
+        public async Task<IActionResult> ChangeEmailRequest([FromBody]  ChangeEmailRequestDto dto)
+        {
+            var userId = _contextService.UserId;
+
+            await _authService.ChangeEmailRequestAsync(userId, dto.NewEmail);
+            return Ok(new ApiResponse { Message = "Підтвердження відправлене на email" });
+        }
+
+        [Authorize]
+        [HttpPost("confirm-email-change")] 
+        public async Task<IActionResult> ConfirmEmailChange(ConfirmEmailChangeDto dto)
+        {
+            var userId = _contextService.UserId;
+
+            await _authService.ConfirmEmailChangeAsync(userId, dto);
+
+            return Ok(new ApiResponse { Message = "Електронная адреса змінена" });
+        }
+
+
+        //------------------------------------------------------
+
+        [Authorize]
+        [HttpPost("delete-account")]
+        public async Task<IActionResult> DeleteAccount(DeleteAccountDto dto)
+        {
+            var userId = _contextService.UserId;
+            await _authService.DeleteAccountAsync(userId, dto.Password);
+
+            return Ok(new ApiResponse { Message = "Ваш аккаунт був деактивований" });
+        }
+
+
+      
+        [Authorize(Roles ="Admin")]
+        [HttpPost("restore-account")]
+        public async Task<IActionResult> RestoreAccount([FromBody] RestoreAccountRequestDto dto)
+        {
+            await _authService.RestoreAccountAsync(dto.Email);
+
+            return Ok(new ApiResponse { Message = "Aккаунт відновлено" });
+        }
+     
 
     }
 }

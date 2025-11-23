@@ -21,6 +21,11 @@ namespace AuthService.Domain.Entities
 
         public DateTime? RefreshTokenExpiryTime { get; set; }  // дата актуальності цього токена
 
+
+        public bool IsDeleted { get; set; }
+
+        public DateTime? DeletedAt { get; set; }
+
         
     }
 }

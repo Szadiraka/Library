@@ -14,13 +14,25 @@ namespace AuthService.Application.Interfaces
 
         Task LogoutAsync(string? userId);
 
+
         Task SendEmailConfirmationAsync(string? userId);
 
         Task<ConfirmEmailResponseDto> ConfirmEmailAsync(string userId, string token);
 
+
         Task ForgotPasswordAsync(string email);
 
         Task ResetPasswordAsync(ResetPasswordDto dto);
+
+        Task ChangePasswordAsync (string? userId, ChangePasswordDto changePasswordDto);
+
+        Task ChangeEmailRequestAsync(string? userId, string NewEmail);
+
+        Task ConfirmEmailChangeAsync(string? userId,  ConfirmEmailChangeDto dto);
+
+        Task DeleteAccountAsync(string? userId, string password);
+
+        Task RestoreAccountAsync(string email);
 
 
 

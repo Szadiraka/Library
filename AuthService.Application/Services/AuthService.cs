@@ -69,6 +69,9 @@ namespace AuthService.Application.Services
             var user = await _userManager.FindByEmailAsync(loginDto.Email) ??
                 throw new UnauthorizedException("невірний логін або пароль");
 
+            if(user.IsDeleted)
+                throw new ForbiddenException("аккаунт видалено");
+
             var validPassword = await _userManager.CheckPasswordAsync(user, loginDto.Password);
             if (!validPassword)
                 throw new UnauthorizedException("невірний логін або пароль");
@@ -85,8 +88,12 @@ namespace AuthService.Application.Services
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.RefreshToken == refreshToken);
             if (user == null)
                 throw new UnauthorizedException("невалідний refresh токен");
+
+            if(user.IsDeleted)
+                throw new ForbiddenException("аккаунт видалено");
+
             if (user.RefreshTokenExpiryTime <= DateTime.UtcNow)
-                throw new UnauthorizedException("refresh токен просрочении");
+                throw new UnauthorizedException("refresh токен просрочений");
 
             return await GenenerateAndSaveTokens(user);          
 
@@ -224,6 +231,117 @@ namespace AuthService.Application.Services
                
 
 
+        }
+
+
+        public async Task ChangePasswordAsync(string? userId, ChangePasswordDto dto)
+        {
+            if (string.IsNullOrEmpty(userId))
+                throw new UnauthorizedException("Користувач не авторизований");
+
+            var user =await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                throw new NotFoundException("Користувача не знайдено");
+
+            var result = await _userManager.ChangePasswordAsync(user, dto.CurrentPassword, dto.NewPassword);
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(x => x.Description));
+                throw new BusinessRuleException("Не вдалося змінити пароль: {errors}");
+            }
+                
+        }
+
+
+
+        public async Task ChangeEmailRequestAsync(string? userId, string newEmail)
+        {
+            if (string.IsNullOrEmpty(userId))
+                throw new UnauthorizedException("Користувач не авторизований");
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                throw new NotFoundException("Користувача не знайдено");
+
+            var token = await _userManager.GenerateChangeEmailTokenAsync(user,newEmail);
+
+            var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+
+     
+            var confirmationLink = $"Ваш код для варифікації вашого email: {encodedToken}";
+
+            await _emailService.SendEmailConfirmationAsync(user.Email!, confirmationLink);
+        }
+
+        public async Task ConfirmEmailChangeAsync(string? userId, ConfirmEmailChangeDto dto)
+        {
+            if (string.IsNullOrEmpty(userId))
+                throw new UnauthorizedException("Користувач не авторизований");
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                throw new NotFoundException("Користувача не знайдено");
+
+
+            var decodedToken = WebEncoders.Base64UrlDecode(dto.Token);
+
+            var normalToken = Encoding.UTF8.GetString(decodedToken);
+
+            var result = await _userManager.ChangeEmailAsync(user, dto.NewEmail, normalToken);
+
+            if (!result.Succeeded)
+            {
+               throw new BusinessRuleException("Невдалося оновити почту");
+            }
+          
+           
+        }
+
+        public async Task DeleteAccountAsync(string? userId, string password)
+        {
+            if (string.IsNullOrEmpty(userId))
+                throw new UnauthorizedException("Користувач не авторизований");
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                throw new NotFoundException("Користувача не знайдено");
+
+            var isPasswordValid = await _userManager.CheckPasswordAsync(user, password);
+            if(!isPasswordValid)
+                throw new UnauthorizedException("невірний пароль");
+
+            user.IsDeleted = true;
+            user.DeletedAt = DateTime.UtcNow;
+
+            user.RefreshToken=string.Empty;
+            user.RefreshTokenExpiryTime = null;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+                throw new BusinessRuleException("не вдалося видалити аккаунт");
+
+            
+        }
+
+        public async Task RestoreAccountAsync(string email)
+        {
+          var user = await _userManager.FindByIdAsync(email);
+            if(user == null)
+                throw new NotFoundException("Користувача не знайдено");
+            if(!user.IsDeleted)
+                throw new BusinessRuleException($"Користувач активний");
+
+            user.IsDeleted = false;
+            user.DeletedAt = null;
+
+            user.RefreshToken=string.Empty;
+            user.RefreshTokenExpiryTime = null;
+
+            var result =await  _userManager.UpdateAsync(user);
+
+            if(!result.Succeeded)
+                throw new BusinessRuleException("не вдалося відновити аккаунт");
         }
     }
 }
