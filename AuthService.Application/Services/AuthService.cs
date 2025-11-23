@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Text;
 
@@ -69,8 +68,25 @@ namespace AuthService.Application.Services
             var user = await _userManager.FindByEmailAsync(loginDto.Email) ??
                 throw new UnauthorizedException("невірний логін або пароль");
 
-            if(user.IsDeleted)
+            if (user.IsDeleted)
                 throw new ForbiddenException("аккаунт видалено");
+
+            if (user.IsBlocked)
+            {
+                if (user.BlockExpiresAt == null || user.BlockExpiresAt > DateTime.UtcNow)
+                    throw new ForbiddenException("Ваш аккаунт заблоковано: " + user.BlockReason);
+
+
+                user.BlockExpiresAt = null;
+                user.IsBlocked = false;
+                user.BlockReason = null;
+                user.BlockedAt = null;
+
+                await _userManager.UpdateAsync(user);
+            }
+
+
+
 
             var validPassword = await _userManager.CheckPasswordAsync(user, loginDto.Password);
             if (!validPassword)
@@ -297,6 +313,7 @@ namespace AuthService.Application.Services
            
         }
 
+        
         public async Task DeleteAccountAsync(string? userId, string password)
         {
             if (string.IsNullOrEmpty(userId))
@@ -324,24 +341,6 @@ namespace AuthService.Application.Services
             
         }
 
-        public async Task RestoreAccountAsync(string email)
-        {
-          var user = await _userManager.FindByIdAsync(email);
-            if(user == null)
-                throw new NotFoundException("Користувача не знайдено");
-            if(!user.IsDeleted)
-                throw new BusinessRuleException($"Користувач активний");
-
-            user.IsDeleted = false;
-            user.DeletedAt = null;
-
-            user.RefreshToken=string.Empty;
-            user.RefreshTokenExpiryTime = null;
-
-            var result =await  _userManager.UpdateAsync(user);
-
-            if(!result.Succeeded)
-                throw new BusinessRuleException("не вдалося відновити аккаунт");
-        }
+       
     }
 }

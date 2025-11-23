@@ -1,10 +1,6 @@
 ﻿using AuthService.Application.DTOs;
 using AuthService.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace AuthService.Application.Mapper
 {
@@ -22,7 +18,7 @@ namespace AuthService.Application.Mapper
                 BirthDate = user.BirthDate,
                 AvatarUrl = user.AvatarUrl,
                 CreatedAt = DateTime.UtcNow,
-                
+
             };
         }
 
@@ -37,8 +33,8 @@ namespace AuthService.Application.Mapper
                 LastName = user.LastName,
                 BirthDate = user.BirthDate,
                 AvatarUrl = user.AvatarUrl,
-                CreatedAt = user.CreatedAt,                
-               
+                CreatedAt = user.CreatedAt,
+
             };
             if (roles != null)
             {
@@ -47,7 +43,56 @@ namespace AuthService.Application.Mapper
             return userDto;
         }
 
-    };
+        public static UserAdminDto ToUserAdminDto(AppUser user, IList<string>? roles = null)
+        {
+            var userDto = new UserAdminDto
+            {
+                Id = user.Id,
+                UserName = user.UserName ?? string.Empty,
+                Email = user.Email!,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                EmailConfirmed = user.EmailConfirmed,
+                IsBlocked = user.IsBlocked,
+                BlockedAt = user.BlockedAt,
+                BlockExpiresAt = user.BlockExpiresAt,
+                BlockReason = user.BlockReason,
+                LockoutEnd = user.LockoutEnd,
+                IsDeleted = user.IsDeleted,
+                DeletedAt = user.DeletedAt
+            };
+
+            if (roles != null)
+            {
+                userDto.Roles = roles.ToList();
+            }
+            return userDto;
+        }
+
+
+        public static BlockedUserDto ToBlockedUserDto(AppUser user, DateTimeOffset now)
+        {
+            var result = new BlockedUserDto
+            {
+
+                Id = user.Id,
+                Email = user.Email!,
+                UserName = user.UserName!,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                LockoutDate = user.LockoutEnd,
+                BlockExpiresAt = user.BlockExpiresAt,
+                BlockReason = user.BlockReason,
+                BlockType = user.LockoutEnd != null && user.LockoutEnd > now
+                ? "System" : "Admin"
+
+            };
+            return result;
+        }
+
+
+    }
+}
         
- }
+ 
 

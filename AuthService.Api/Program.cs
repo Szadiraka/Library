@@ -31,6 +31,7 @@ namespace AuthService.Api
             builder.Services.AddScoped<IUserContextService, UserContextService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IEmailService, EmailService>();
+            builder.Services.AddScoped<IAdminService, AdminService>();
           
 
 

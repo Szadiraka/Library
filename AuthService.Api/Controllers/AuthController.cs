@@ -1,11 +1,8 @@
 using AuthService.Application.DTOs;
 using AuthService.Application.Interfaces;
-using AuthService.Application.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration.UserSecrets;
-using System.Security.Claims;
+
 
 namespace AuthService.Api.Controllers
 {
@@ -168,14 +165,7 @@ namespace AuthService.Api.Controllers
 
 
       
-        [Authorize(Roles ="Admin")]
-        [HttpPost("restore-account")]
-        public async Task<IActionResult> RestoreAccount([FromBody] RestoreAccountRequestDto dto)
-        {
-            await _authService.RestoreAccountAsync(dto.Email);
-
-            return Ok(new ApiResponse { Message = "Aккаунт відновлено" });
-        }
+       
      
 
     }

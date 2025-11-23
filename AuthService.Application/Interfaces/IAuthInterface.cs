@@ -32,7 +32,7 @@ namespace AuthService.Application.Interfaces
 
         Task DeleteAccountAsync(string? userId, string password);
 
-        Task RestoreAccountAsync(string email);
+       
 
 
 
