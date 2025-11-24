@@ -22,11 +22,11 @@ namespace AuthService.Api.Controllers
 
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
+        public async Task<IActionResult> Register([FromBody] RegisterDto registerDto) 
         {
             if (!ModelState.IsValid)
                 return BadRequest(new ApiResponse { Message = "Не коректний запит" });
-
+    
 
             var user = await _authService.RegisterAsync(registerDto);
             return Ok(new ApiResponse { Message = "Реєстрація успішна", Data = user });
@@ -51,6 +51,10 @@ namespace AuthService.Api.Controllers
         [HttpPost("refresh-token")]
         public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest request)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new ApiResponse { Message = "Не коректний запит" });
+
+
             var response = await _authService.RefreshTokenAsync(request.Token, request.RefreshToken);
             return Ok(new ApiResponse { Message = "токен успішно оновлено", Data = response });
         }
@@ -88,6 +92,7 @@ namespace AuthService.Api.Controllers
    
         public async Task<IActionResult> ConfirmEmail([FromQuery] ConfirmEmailRequestDto request)
         {
+        
             var result = await _authService.ConfirmEmailAsync(request.UserId, request.Token);
 
             return Ok(new ApiResponse { Message = result.Message });
@@ -102,6 +107,10 @@ namespace AuthService.Api.Controllers
         [HttpPost("forgot-password")]     
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new ApiResponse { Message = "Не коректний запит" });
+
+
             await _authService.ForgotPasswordAsync(dto.Email);
             return Ok(new ApiResponse { Message = "Якщо email існує, на нього відправлено подальші інструкції" });
         }
@@ -110,6 +119,9 @@ namespace AuthService.Api.Controllers
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new ApiResponse { Message = "Не коректний запит" });
+
             await _authService.ResetPasswordAsync(dto);
             return Ok(new ApiResponse { Message = "Ваш пароль було успішно змінено" });
         }
@@ -122,6 +134,9 @@ namespace AuthService.Api.Controllers
         [HttpPut("change-password")]  
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new ApiResponse { Message = "Не коректний запит" });
+
             var userId = _contextService.UserId;
             await _authService.ChangePasswordAsync(userId, dto);
             return Ok(new ApiResponse { Message = "Ваш пароль було успішно змінено" });
@@ -133,6 +148,9 @@ namespace AuthService.Api.Controllers
         [HttpPost("change-email-request")]
         public async Task<IActionResult> ChangeEmailRequest([FromBody]  ChangeEmailRequestDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new ApiResponse { Message = "Не коректний запит" });
+
             var userId = _contextService.UserId;
 
             await _authService.ChangeEmailRequestAsync(userId, dto.NewEmail);
@@ -143,6 +161,9 @@ namespace AuthService.Api.Controllers
         [HttpPost("confirm-email-change")] 
         public async Task<IActionResult> ConfirmEmailChange(ConfirmEmailChangeDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new ApiResponse { Message = "Не коректний запит" });
+
             var userId = _contextService.UserId;
 
             await _authService.ConfirmEmailChangeAsync(userId, dto);
@@ -157,6 +178,9 @@ namespace AuthService.Api.Controllers
         [HttpPost("delete-account")]
         public async Task<IActionResult> DeleteAccount(DeleteAccountDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new ApiResponse { Message = "Не коректний запит" });
+
             var userId = _contextService.UserId;
             await _authService.DeleteAccountAsync(userId, dto.Password);
 

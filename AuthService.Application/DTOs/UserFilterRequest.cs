@@ -8,9 +8,13 @@ namespace AuthService.Application.DTOs
 
         public bool? IsBlocked { get; set; }
 
-        public bool? IsDeleted { get; set; }
+        public bool? EmailConfirmed { get; set; }
 
-        public string? RoleName { get; set; }
+        public List<string>? Roles { get; set; }
+
+        public  bool? OnlyDeleted { get; set; }
+
+         public bool? OnlyActive { get; set; }
 
         public int Page { get; set; } = 1;
 

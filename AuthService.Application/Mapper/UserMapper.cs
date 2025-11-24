@@ -1,5 +1,6 @@
 ﻿using AuthService.Application.DTOs;
 using AuthService.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace AuthService.Application.Mapper
@@ -89,6 +90,8 @@ namespace AuthService.Application.Mapper
             };
             return result;
         }
+
+        
 
 
     }

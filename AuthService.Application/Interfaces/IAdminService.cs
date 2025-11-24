@@ -1,4 +1,5 @@
 ﻿using AuthService.Application.DTOs;
+using AuthService.Domain.Enums;
 
 
 namespace AuthService.Application.Interfaces
@@ -16,5 +17,9 @@ namespace AuthService.Application.Interfaces
         Task<UserAdminDto> GetUserByIdAsync(string userId);
 
         Task<PagedResult<UserAdminDto>> GetUsersAsync(UserFilterRequest filter);
+
+        Task AddRoleToUserAsync(string userId, UserRoles role);
+
+        Task  RemoveRoleFromUserAsync(string userId, UserRoles role);
     }
 }

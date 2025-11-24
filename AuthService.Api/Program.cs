@@ -3,13 +3,6 @@ using AuthService.Api.Middleware;
 using AuthService.Api.Services;
 using AuthService.Application.Interfaces;
 using AuthService.Application.Services;
-using AuthService.Domain.Entities;
-using AuthService.Infrastructure.Seed;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-
 
 namespace AuthService.Api
 {
@@ -26,9 +19,10 @@ namespace AuthService.Api
 
             builder.Services.AddAuthDatabase(builder.Configuration);
             builder.Services.AddHttpContextAccessor();
-            builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
-            builder.Services.AddScoped<IAuthInterface, _AuthService>();
+            builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();       
             builder.Services.AddScoped<IUserContextService, UserContextService>();
+            builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
+            builder.Services.AddScoped<IAuthInterface, _AuthService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<IAdminService, AdminService>();

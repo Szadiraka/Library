@@ -44,7 +44,10 @@ namespace AuthService.Application.DTOs
         [Range(typeof(DateTime), "1900-01-01", "2025-01-01", ErrorMessage ="Invalid birth date")]
         public DateTime? BirthDate { get; set; }
 
-        public string? AvatarUrl { get; set; }
+
+
+        public string? AvatarUrl { get; set; }       
+   
 
 
         [JsonConverter(typeof(JsonStringEnumConverter))]

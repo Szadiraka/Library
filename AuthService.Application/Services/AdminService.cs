@@ -2,7 +2,9 @@
 using AuthService.Application.Interfaces;
 using AuthService.Application.Mapper;
 using AuthService.Domain.Entities;
+using AuthService.Domain.Enums;
 using AuthService.Domain.Exceptions;
+using AuthService.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,10 +14,14 @@ namespace AuthService.Application.Services
     public class AdminService : IAdminService
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly RoleManager<AppRole> _roleManager;
+        private readonly AuthDbContext _context;
 
-        public AdminService(UserManager<AppUser> userManager)
+        public AdminService(UserManager<AppUser> userManager, AuthDbContext context, RoleManager<AppRole> roleManager)
         {
             _userManager = userManager;
+            _context = context;
+            _roleManager = roleManager;
         }
 
 
@@ -40,7 +46,7 @@ namespace AuthService.Application.Services
         }
 
 
-        // блокування користувача
+      
         public async Task BlockUserAsync(BlockUserDto dto)
         {
             var user =await _userManager.FindByIdAsync(dto.UserId);
@@ -61,7 +67,7 @@ namespace AuthService.Application.Services
         }
 
 
-        //розблокування користувача
+      
         public async Task UnblockUserAsync(UnblockUserDto dto)
         {
             var user = await _userManager.FindByIdAsync(dto.UserId);
@@ -78,7 +84,7 @@ namespace AuthService.Application.Services
             await _userManager.UpdateAsync(user);
         }
 
-        // отримання блокованих користувач
+  
         public async Task<List<BlockedUserDto>> GetBlockedUserAsync()
         {
 
@@ -97,7 +103,7 @@ namespace AuthService.Application.Services
             return list;
         }
 
-        // отримання даних про користувача по id
+   
 
         public async Task<UserAdminDto> GetUserByIdAsync(string userId)
         {
@@ -116,53 +122,71 @@ namespace AuthService.Application.Services
 
         public async Task<PagedResult<UserAdminDto>> GetUsersAsync(UserFilterRequest request)
         {
-            var query = _userManager.Users.AsQueryable();
+            var query = from u in _context.Users
+                        join ur in _context.UserRoles on u.Id equals ur.UserId into userRoles
+                        from ur in userRoles.DefaultIfEmpty()
+                        join r in _context.Roles on ur.RoleId equals r.Id into roles
+                        select new { User = u, Roles = roles };
 
-            if(!string.IsNullOrWhiteSpace(request.Search))
+            if (!string.IsNullOrEmpty(request.Search))
             {
                 var s = request.Search.ToLower();
 
-                query = query.Where(x => x.Email!.ToLower().Contains(s) ||
-                    x.UserName!.ToLower().Contains(s) ||
-                    (x.FirstName !=null && x.FirstName.ToLower().Contains(s)) ||
-                    (x.LastName != null && x.LastName.ToLower().Contains(s))
+                query = query.Where(x => x.User.Email!.ToLower().Contains(s) ||
+                    x.User.UserName!.ToLower().Contains(s) ||
+                    (x.User.FirstName !=null && x.User.FirstName.ToLower().Contains(s)) ||
+                    (x.User.LastName != null && x.User.LastName.ToLower().Contains(s))
 
                  );
             }
-
-            if (request.IsDeleted != null)
-            {
-                query = query.Where(x => x.IsDeleted == request.IsDeleted);
-            }
+           
 
             if (request.IsBlocked != null)
             {
-                query = query.Where(x=>x.IsBlocked == request.IsBlocked);
+                query = query.Where(x => 
+                     (x.User.IsBlocked || (x.User.LockoutEnd != null && x.User.LockoutEnd > DateTimeOffset.UtcNow))
+                        == request.IsBlocked
+                );
+                     
+            }
+
+            if (request.EmailConfirmed != null)
+                query = query.Where(u => u.User.EmailConfirmed == request.EmailConfirmed);
+
+            if (request.OnlyDeleted == true)
+                query = query.Where(u => u.User.IsDeleted);
+
+
+            if (request.OnlyActive == true)
+                query = query.Where(u => !u.User.IsDeleted);
+
+
+
+            if (request.Roles != null && request.Roles.Any())
+            {
+                query = query.Where(x => x.Roles.Any(r => request.Roles.Contains(r.Name!)));
             }
 
             var total = await query.CountAsync();
 
             var users = await query
-                .OrderBy(x => x.LastName)
+                .OrderBy(x => x.User.Email)
                 .Skip((request.Page - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .ToListAsync();
 
-            //var result = users.Select(user => {
-               
-            //    UserMapper.ToUserAdminDto(user,await _userManager.GetRolesAsync(user))
-            //    }).ToList();
-            var list = new List<UserAdminDto>();
-            foreach (var user in users) {
-                var roles = await _userManager.GetRolesAsync(user);
-                var userDto = UserMapper.ToUserAdminDto(user, roles);
-                list.Add(userDto);
-            }
-            //  добавить фильтр оп ролее!!!!!!!!!!!!!!!!!!!!!!
+            var list = users.GroupBy(x => x.User)
+                .Select(g =>
+                {
+                    var user = g.Key;
+                    var roles = g.SelectMany(x => x.Roles).Select(r => r.Name).Distinct().ToList();
+                    return UserMapper.ToUserAdminDto(user, roles!);
+                });
+
 
             return new PagedResult<UserAdminDto>
             {
-                Items = list,
+                Items = list?.ToList() ?? new List<UserAdminDto>(), 
                 TotalCount = total,
                 Page = request.Page,
                 PageSize = request.PageSize
@@ -170,10 +194,43 @@ namespace AuthService.Application.Services
 
         }
 
+       
+        public async Task AddRoleToUserAsync(string userId, UserRoles role)
+        {
+           var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                throw new NotFoundException("Користувача не знайдено");
+
+            var roleExists = await _roleManager.RoleExistsAsync(role.ToString());
+
+            if (!roleExists)
+                throw new NotFoundException("роль не знайдено");
+
+            var result =await  _userManager.AddToRoleAsync(user, role.ToString());
+
+            if (!result.Succeeded)
+
+                throw new BusinessRuleException(string.Join(", ", result.Errors.Select(x => x.Description)));
 
 
+        }
 
 
+        public async Task RemoveRoleFromUserAsync(string userId, UserRoles role)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                throw new NotFoundException("Користувача не знайдено");
 
+            var roleExists = await _roleManager.RoleExistsAsync(role.ToString());
+
+            if (!roleExists)
+                throw new NotFoundException("роль не знайдено");
+
+            var result = await _userManager.RemoveFromRoleAsync(user, role.ToString());
+
+            if (!result.Succeeded)
+                throw new BusinessRuleException(string.Join(", ", result.Errors.Select(x => x.Description)));
+        }
     }
 }
