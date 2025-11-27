@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Authors.Application\Authors.Application.csproj" />
-    <ProjectReference Include="..\Authors.Infrastructure\Authors.Infrastructure.csproj" />
+    <ProjectReference Include="..\BooksService.Application\BooksService.Application.csproj" />
+    <ProjectReference Include="..\BooksService.Infrastructure\BooksService.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

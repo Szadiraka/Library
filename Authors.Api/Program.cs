@@ -1,3 +1,4 @@
+using Authors.Api.Extensions;
 using Authors.Api.Middleware;
 using Authors.Application.Interfaces;
 using Authors.Application.Services;
@@ -13,8 +14,10 @@ namespace Authors.Api
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
             builder.Services.AddControllers();
+            builder.Services.AddJwtAuth(builder.Configuration);           
+
+         
             builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
@@ -27,8 +30,6 @@ namespace Authors.Api
 
 
             app.UseHttpsRedirection();
-
-
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();

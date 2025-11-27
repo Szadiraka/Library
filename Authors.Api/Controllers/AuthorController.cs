@@ -1,6 +1,7 @@
 ﻿using Authors.Application.DTOs;
 using Authors.Application.Interfaces;
 using Authors.Domain.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace Authors.Api.Controllers
 {
@@ -15,7 +16,7 @@ namespace Authors.Api.Controllers
             _service = authorService;
         }
 
-
+        [Authorize]
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetAuthorById(Guid id)
         {
@@ -25,6 +26,7 @@ namespace Authors.Api.Controllers
         }
 
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAllAuthors([FromQuery] AuthorQuery query)
         {
@@ -35,6 +37,8 @@ namespace Authors.Api.Controllers
             return Ok(new ApiResponse { Message = "Авторів отримано", Data = authors });
         }
 
+
+        [Authorize(Roles = "Admin,Librarian")]
         [HttpPost("create")]
         public async Task<IActionResult> CreateAuthor([FromBody] AuthorDto dto)
         {
@@ -48,6 +52,8 @@ namespace Authors.Api.Controllers
 
         }
 
+
+        [Authorize(Roles = "Admin,Librarian")]
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdateAuthor(Guid id, [FromBody] AuthorDto dto)
         {
@@ -59,6 +65,8 @@ namespace Authors.Api.Controllers
             return Ok(new ApiResponse { Message = "Дані про автора оновлено", Data = author });
         }
 
+
+        [Authorize(Roles = "Admin,Librarian")]
         [HttpDelete("{id:guid}")]
 
         public async Task<IActionResult> DeleteAuthor(Guid id)
@@ -67,6 +75,8 @@ namespace Authors.Api.Controllers
             return Ok(new ApiResponse { Message = "Автора видалено" });
         }
 
+
+        [Authorize(Roles = "Admin,Librarian")]
         [HttpGet("exists")]
         public async Task<IActionResult> AuthorExists([FromQuery] ExistAuthorDto dto)
         {

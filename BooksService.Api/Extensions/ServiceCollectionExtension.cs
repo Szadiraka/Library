@@ -1,37 +1,14 @@
-﻿using AuthService.Application.DTOs;
-using AuthService.Domain.Entities;
-using AuthService.Infrastructure.Persistence;
+﻿using BooksService.Application.DTOs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-
 using System.Text;
 using System.Text.Json;
 
-namespace AuthService.Api.Extensions
+namespace BooksService.Api.Extensions
 {
-    public static class ServiceCollectionExtension
+    public static  class ServiceCollectionExtension
     {
-
-        public static IServiceCollection AddAuthDatabase(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddDbContext<AuthDbContext>(options =>
-            {
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-            });
-
-            services.AddIdentityCore<AppUser>(options =>
-            {
-                options.User.RequireUniqueEmail = true;
-            }).AddRoles<AppRole>()
-               .AddEntityFrameworkStores<AuthDbContext>()
-              .AddDefaultTokenProviders();
-
-            return services;
-        }
-
-        public static IServiceCollection AddCustomAuthentication(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddJwtAuth(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddAuthentication(options =>
             {
@@ -91,8 +68,9 @@ namespace AuthService.Api.Extensions
 
                  });
 
+            services.AddAuthorization();
+
             return services;
         }
-
     }
 }
