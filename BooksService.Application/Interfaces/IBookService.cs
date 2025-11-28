@@ -25,5 +25,7 @@ namespace BooksService.Application.Interfaces
         Task<bool> RestoreBookAsync(Guid id);
 
         Task<PagedResult<BookDto>> GetAllBooksByAuthorIdAsync(BookAuthorQuery query);
+
+        Task<PagedResult<BookDto>> GetAllBooksByGenreIdAsync(GenreIdQuery query);
     }
 }

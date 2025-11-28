@@ -91,6 +91,13 @@ namespace BooksService.Application.Services
             return BookMapper.ToBookDto(result);
         }
 
-      
+        public async Task<PagedResult<BookDto>> GetAllBooksByGenreIdAsync(GenreIdQuery query)
+        {
+            PagedResult<Book> result = await _repo.GetAllBooksByGenreIdAsync(query);
+
+            var list = BookMapper.MapToDtoList(result);
+
+            return list;
+        }
     }
 }

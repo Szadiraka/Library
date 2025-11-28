@@ -15,6 +15,7 @@ namespace BooksService.Application.Mappers
                 Description = dto.Description,
                 PublishedYear = dto.PublishedYear,            
                 GenreId = dto.GenreId, 
+                IsDeleted = dto.IsDeleted,
                 CreatedAt = DateTimeOffset.UtcNow,
                 
             };
@@ -28,8 +29,11 @@ namespace BooksService.Application.Mappers
                 Title = book.Title,
                 Description = book.Description,
                 PublishedYear = book.PublishedYear,              
-                GenreId = book.GenreId,             
-                IsDeleted = book.IsDeleted
+                GenreId = book.GenreId, 
+                Genre = book.Genre,
+                IsDeleted = book.IsDeleted,
+                BookAuthors = book.BookAuthors,
+                
             };
         }
 
@@ -51,7 +55,7 @@ namespace BooksService.Application.Mappers
             entity.Description = dto.Description;
             entity.PublishedYear = dto.PublishedYear;         
             entity.GenreId = dto.GenreId;           
-            entity.UpdatedAt = DateTimeOffset.UtcNow;
+            entity.UpdatedAt = DateTimeOffset.Now;
 
         }
 

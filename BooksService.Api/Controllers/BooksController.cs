@@ -18,7 +18,7 @@ namespace BooksService.Api.Controllers
             _service = bookService;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetBookById(Guid id)
         {
@@ -28,7 +28,7 @@ namespace BooksService.Api.Controllers
         }
 
 
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAllBooks([FromQuery] BookQuery query)
         {
@@ -40,7 +40,19 @@ namespace BooksService.Api.Controllers
         }
 
 
-        [Authorize(Roles = "Admin,Librarian")]
+        //[Authorize]
+        [HttpGet("by-genre")]
+        public async Task<IActionResult> GetAllBooksByGenreId([FromQuery] GenreIdQuery query)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(new ApiResponse { Message = "Не коректний запит" });
+
+            var books = await _service.GetAllBooksByGenreIdAsync(query);
+            return Ok(new ApiResponse { Message = "Книги отримано", Data = books });
+        }
+
+
+        //[Authorize(Roles = "Admin,Librarian")]
         [HttpGet("deleted-books")]
         public async Task<IActionResult> GetAllDeletedBooks()
         {
@@ -51,7 +63,7 @@ namespace BooksService.Api.Controllers
             return Ok(new ApiResponse { Message = "Видалені книги отримано", Data = books });
         }
 
-        [Authorize(Roles = "Admin,Librarian")]
+        //[Authorize(Roles = "Admin,Librarian")]
         [HttpPut("restore-book/{id:guid}")]
         public async Task<IActionResult> RestoreBook(Guid id)
         {
@@ -65,9 +77,9 @@ namespace BooksService.Api.Controllers
 
 
 
-        [Authorize(Roles = "Admin,Librarian")]
+        //[Authorize(Roles = "Admin,Librarian")]
         [HttpPost("create")]
-        public async Task<IActionResult> CreateGenre([FromBody] BookDto dto)
+        public async Task<IActionResult> CreateBook([FromBody] BookDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new ApiResponse { Message = "Не коректний запит" });
@@ -80,7 +92,7 @@ namespace BooksService.Api.Controllers
         }
 
 
-        [Authorize(Roles = "Admin,Librarian")]
+        //[Authorize(Roles = "Admin,Librarian")]
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdateBook(Guid id, [FromBody] BookDto dto)
         {
@@ -93,7 +105,7 @@ namespace BooksService.Api.Controllers
         }
 
 
-        [Authorize(Roles = "Admin,Librarian")]
+        //[Authorize(Roles = "Admin,Librarian")]
         [HttpDelete("{id:guid}")]
 
         public async Task<IActionResult> DeleteBook(Guid id)
@@ -103,7 +115,7 @@ namespace BooksService.Api.Controllers
         }
 
 
-        [Authorize(Roles = "Admin,Librarian")]
+        //[Authorize(Roles = "Admin,Librarian")]
         [HttpGet("exists")]
         public async Task<IActionResult> BookExists([FromQuery] ExistBookDto dto)
         {
@@ -116,8 +128,8 @@ namespace BooksService.Api.Controllers
         }
 
 
-        [Authorize(Roles ="Admin,Librarian")]
-        [HttpGet("byauthor")]
+        //[Authorize(Roles ="Admin,Librarian")]
+        [HttpGet("by-author")]
         public async Task<IActionResult> GetAllBooksByAuthorId([FromQuery] BookAuthorQuery query)
         {
             var result = await _service.GetAllBooksByAuthorIdAsync(query);

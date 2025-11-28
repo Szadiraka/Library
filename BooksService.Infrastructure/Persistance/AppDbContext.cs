@@ -26,6 +26,11 @@ namespace BooksService.Infrastructure.Persistance
 
             modelBuilder.Entity<BookAuthor>()
                 .HasKey(ba=> new { ba.AuthorId, ba.BookId });
+
+            modelBuilder.Entity<BookAuthor>()
+           .HasOne(ba => ba.Book)
+           .WithMany(b => b.BookAuthors)
+           .HasForeignKey(ba => ba.BookId);
         }
     }
 }

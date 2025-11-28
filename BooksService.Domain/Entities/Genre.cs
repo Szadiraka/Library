@@ -1,5 +1,7 @@
 ﻿
 
+using System.Text.Json.Serialization;
+
 namespace BooksService.Domain.Entities
 {
     public class Genre
@@ -15,6 +17,8 @@ namespace BooksService.Domain.Entities
         public bool IsDeleted { get; set; }
         public DateTimeOffset? DeletedAt { get; set; }
 
+
+        [JsonIgnore]
         public List<Book> Books { get; set; } = new List<Book>();
     }
 }

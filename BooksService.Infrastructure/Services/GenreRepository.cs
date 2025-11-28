@@ -45,7 +45,7 @@ namespace BooksService.Infrastructure.Services
         public async Task<bool> ExistsGenreAsync(string name)
         {
             string nameToUpper = name.ToUpper();
-            var result = await _context.Genres.AnyAsync(x => x.Name.ToUpper() == nameToUpper);
+            var result = await _context.Genres.AnyAsync(x => x.Name.ToUpper() == nameToUpper && x.IsDeleted == false);
             return result;
         }
 
@@ -57,7 +57,7 @@ namespace BooksService.Infrastructure.Services
 
         public async Task<PagedResult<Genre>> GetAllGenresAsync(GenreQuery query)
         {
-            var genres = _context.Genres.AsQueryable();
+            var genres = _context.Genres.Where(x => x.IsDeleted == false).AsQueryable();
 
             if (!string.IsNullOrEmpty(query.Name))
             {
@@ -84,7 +84,7 @@ namespace BooksService.Infrastructure.Services
 
         public async Task<Genre?> GetGenreByIdAsync(Guid id)
         {
-            var genre = await _context.Genres.FirstOrDefaultAsync(x => x.Id == id);           
+            var genre = await _context.Genres.FirstOrDefaultAsync(x => x.Id == id && x.IsDeleted == false);           
             return genre;
         }
 

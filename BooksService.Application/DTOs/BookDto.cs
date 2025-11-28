@@ -1,9 +1,8 @@
 ﻿using BooksService.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
 
 namespace BooksService.Application.DTOs
 {
@@ -11,19 +10,24 @@ namespace BooksService.Application.DTOs
     {
         public Guid? Id { get; set; }
 
+        [Required]
+        [MinLength(3), MaxLength(100)]
         public string Title { get; set; } = string.Empty;
 
         public string? Description { get; set; }
 
-        public int PublishedYear { get; set; }
+        [Range(1900,2100)]
+        public int PublishedYear { get; set; }       
 
-        public List<BookAuthor> BookAuthors { get; set; } = new List<BookAuthor>();
-
+        [Required]
         public Guid GenreId { get; set; }
         public Genre? Genre { get; set; }
 
         public bool IsDeleted { get; set; }
 
-     
+        [JsonIgnore]
+        public List<BookAuthor> BookAuthors { get; set; } = new List<BookAuthor>();
+
+
     }
 }

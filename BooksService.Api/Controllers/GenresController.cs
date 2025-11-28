@@ -17,7 +17,7 @@ namespace BooksService.Api.Controllers
             _service = genreService;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetGenreById(Guid id)
         {
@@ -27,7 +27,7 @@ namespace BooksService.Api.Controllers
         }
 
 
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAllGenres([FromQuery] GenreQuery query)
         {
@@ -39,7 +39,7 @@ namespace BooksService.Api.Controllers
         }
 
 
-        [Authorize(Roles = "Admin,Librarian")]
+        //[Authorize(Roles = "Admin,Librarian")]
         [HttpGet("deleted-genres")]
         public async Task<IActionResult> GetAllDeletedGenres()
         {
@@ -50,7 +50,7 @@ namespace BooksService.Api.Controllers
             return Ok(new ApiResponse { Message = "Видалені жанри отримано", Data = genres });
         }
 
-        [Authorize(Roles = "Admin,Librarian")]
+        //[Authorize(Roles = "Admin,Librarian")]
         [HttpPut("restore-genre/{id:guid}")]
         public async Task<IActionResult> RestoreGenre(Guid id)
         {
@@ -64,7 +64,7 @@ namespace BooksService.Api.Controllers
 
 
 
-        [Authorize(Roles = "Admin,Librarian")]
+        //[Authorize(Roles = "Admin,Librarian")]
         [HttpPost("create")]
         public async Task<IActionResult> CreateGenre([FromBody] GenreDto dto)
         {
@@ -79,7 +79,7 @@ namespace BooksService.Api.Controllers
         }
 
 
-        [Authorize(Roles = "Admin,Librarian")]
+        //[Authorize(Roles = "Admin,Librarian")]
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> UpdateGenre(Guid id, [FromBody] GenreDto dto)
         {
@@ -92,7 +92,7 @@ namespace BooksService.Api.Controllers
         }
 
 
-        [Authorize(Roles = "Admin,Librarian")]
+        //[Authorize(Roles = "Admin,Librarian")]
         [HttpDelete("{id:guid}")]
 
         public async Task<IActionResult> DeleteGenre(Guid id)
@@ -102,7 +102,7 @@ namespace BooksService.Api.Controllers
         }
 
 
-        [Authorize(Roles = "Admin,Librarian")]
+        //[Authorize(Roles = "Admin,Librarian")]
         [HttpGet("exists")]
         public async Task<IActionResult> GenreExists([FromQuery] string name)
         {

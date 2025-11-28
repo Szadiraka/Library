@@ -25,7 +25,10 @@ namespace BooksService.Application.Mappers
             {
                 Id = genre.Id,
                 Name = genre.Name,            
-                IsDeleted = genre.IsDeleted                
+                IsDeleted = genre.IsDeleted ,
+                UpdatedAt = genre.UpdatedAt,
+                CreatedAt = genre.CreatedAt,
+                DeletedAt = genre.DeletedAt
             };
         }
 
@@ -45,7 +48,8 @@ namespace BooksService.Application.Mappers
         {
             entity.Name = dto.Name;          
             entity.IsDeleted = dto.IsDeleted;
-            entity.UpdatedAt = DateTimeOffset.UtcNow;
+            entity.UpdatedAt = DateTimeOffset.Now;
+            entity.DeletedAt = dto.DeletedAt;
 
         }
 
