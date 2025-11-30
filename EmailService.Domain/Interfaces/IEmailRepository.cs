@@ -8,10 +8,12 @@ namespace EmailService.Domain.Interfaces
     {
         Task AddAsync(EmailMessage message);
 
-        Task<EmailMessage?> GetByIdAsync(Guid id);
+        Task<EmailMessage> GetByIdAsync(Guid id);
 
-        Task UpdateAsync(EmailMessage mressage);
+        Task UpdateAsync(EmailMessage message);
 
         Task <PagedResult<EmailMessage>> GetMessagesAsync(EmailQuery query);
+
+        Task DeleteAsync(Guid id);
     }
 }
