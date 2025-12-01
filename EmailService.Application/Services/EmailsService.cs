@@ -12,33 +12,37 @@ namespace EmailService.Application.Services
     {
         private readonly IEmailSender _sender;
         private readonly IEmailRepository _repository;
+        private readonly IEmailTemplateService _templateService;
 
-        public EmailsService(IEmailSender sender, IEmailRepository repository)
+        public EmailsService(IEmailSender sender, IEmailRepository repository, IEmailTemplateService templateService)
         {
             _sender = sender;
             _repository = repository;
+            _templateService = templateService;
         }
 
-        public async Task ProcessEmailAsync(Guid messageId)
+        public async Task ProcessEmailAsync(Guid messageId, string template, Dictionary<string, string> data)
         {
            var message = await _repository.GetByIdAsync(messageId);
             if (message == null)
                 throw new NotFoundException("повідомлення не знайдено");
-                try
-                {
-                    await _sender.SendEmailAsync(message.To, message.Subject, message.Body);
-                    message.IsSent = true;
-                }
-                catch (Exception ex)
-                {
-                    message.ErrorMessage = ex.Message;
-                    message.IsSent = false;                   
-                }
-                finally
-                {
-                    message.SentAt = DateTime.Now;
-                    await _repository.UpdateAsync(message);
-                }         
+            try
+            {
+                var html = await _templateService.RenderTemplateAsync(template, data);             
+
+                await _sender.SendEmailAsync(message.To, message.Subject, message.Body);
+                message.IsSent = true;
+            }
+            catch (Exception ex)
+            {
+                message.ErrorMessage = ex.Message;
+                message.IsSent = false;                   
+            }
+            finally
+            {
+                message.SentAt = DateTime.Now;
+                await _repository.UpdateAsync(message);
+            }         
 
         }
 

@@ -10,14 +10,17 @@ namespace EmailService.Infrastructure.Services
     public class EmailSender : IEmailSender
     {
         private readonly EmailSettings _settings;
+    
 
         public EmailSender(IOptions<EmailSettings> options)
         {
             _settings = options.Value;
+            
         }
 
         public async Task SendEmailAsync(string to, string subject, string body)
         {
+
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("Library", _settings.From));
             message.To.Add(new MailboxAddress("", to));

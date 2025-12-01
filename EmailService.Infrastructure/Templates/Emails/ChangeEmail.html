@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Изменение электронной почты</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f4f6f9;
+            font-family: Arial, sans-serif;
+        }
+     
+        .container {
+            max-width: 640px;
+            margin: 60px auto;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 40px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #2563eb;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #333;
+            font-size: 17px;
+            line-height: 1.6;
+        }
+
+        .token-title {
+            margin-top: 25px;
+            font-weight: bold;
+            color: #111827;
+        }
+
+        .token-block {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            padding: 18px;
+            border-radius: 10px;
+            margin-top: 10px;
+            font-size: 15px;
+            color: #374151;
+            word-break: break-all;
+        }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 14px;
+            color: #999;
+        }
+    </style>
+   
+
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="icon">📧🔄</div>
+
+        <h1>Изменение электронной почты</h1>
+
+        <p>
+            {{Message}}
+        </p>
+
+        <p class="token-title">
+            Ваш токен для подтверждения изменения email:
+        </p>
+
+        <div class="token-block">
+            {{Token}}
+        </div>
+
+        <div class="footer">
+            © {{Year}} • Auth Service
+        </div>
+     
+
+    </div>
+
+</body>
+</html>

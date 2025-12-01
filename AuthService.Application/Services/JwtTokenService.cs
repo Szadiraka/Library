@@ -2,6 +2,7 @@
 using AuthService.Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -92,6 +93,34 @@ namespace AuthService.Application.Services
 
             return new JwtSecurityTokenHandler().WriteToken(token);
 
+        }
+
+        public string GenerateTokenForEmailService()
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Role, "AuthService"),
+                new Claim("iss", "AuthService"),                
+            };
+
+          
+
+            var keyString = _configuration["Jwt:Key"];
+
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyString));
+
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(10),
+                signingCredentials: credentials
+           );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
 

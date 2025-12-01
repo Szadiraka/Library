@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>Email подтвержден</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f3f4f6;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        .header {
+            background: #16a34a;
+            color: white;
+            padding: 24px;
+            text-align: center;
+        }
+
+            .header h1 {
+                margin: 0;
+                font-size: 22px;
+            }
+
+        .content {
+            padding: 32px 24px;
+            color: #1f2937;
+            font-size: 15px;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .message {
+            background: #ecfdf5;
+            border: 1px solid #d1fae5;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #065f46;
+            margin-top: 15px;
+        }
+
+        .footer {
+            background: #f9fafb;
+            padding: 20px 24px;
+            text-align: center;
+            font-size: 13px;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="header">
+            <h1>✅ Email успешно подтверждён</h1>
+        </div>
+
+        <div class="content">
+            <p>Поздравляем! 🎉</p>
+
+            <div class="message">
+                {{Message}}
+            </div>
+
+            <p style="margin-top: 24px;">
+                Теперь вы можете безопасно пользоваться всеми возможностями сервиса.
+            </p>
+        </div>
+
+        <div class="footer">
+            © {{Year}} "Library" | Все права защищены
+        </div>
+
+    </div>
+
+</body>
+</html>

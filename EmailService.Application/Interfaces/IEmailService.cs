@@ -9,7 +9,7 @@ namespace EmailService.Application.Interfaces
     {
         Task<Guid> AddEmailAsync(EmailMessageDto dto);
 
-        Task ProcessEmailAsync(Guid messageId);
+        Task ProcessEmailAsync(Guid messageId, string template, Dictionary<string, string> data);
 
         Task<EmailMessageDto> GetByIdAsync(Guid id);
 

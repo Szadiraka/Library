@@ -1,8 +1,11 @@
 ﻿using EmailService.Application.DTOs;
+using EmailService.Application.Exceptions;
 using EmailService.Application.Interfaces;
 using EmailService.Domain.Queries;
 using Hangfire;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace EmailService.Api.Controllers
 {
@@ -17,21 +20,26 @@ namespace EmailService.Api.Controllers
             _emailService = emailService;
         }
 
-
+        //[Authorize(Roles = "AuthService")]
         [HttpPost("send")]
-        public async Task<IActionResult> SendEmail([FromBody] EmailMessageDto dto)
+        public async Task<IActionResult> SendEmail([FromBody] EmailRequest request)
         {
-            var messageId = await _emailService.AddEmailAsync(dto);
+            if (!ModelState.IsValid)
+                throw new _ValidationException("Дані повідомлення некоректні");
 
-            // планируем фоновую задачу через HangFire
-            BackgroundJob.Enqueue(() => _emailService.ProcessEmailAsync(messageId));
+            if (request.Data.Count == 0) 
+                throw new _ValidationException("Словник повідомлення повинен бути заповненим");
+
+            var messageId = await _emailService.AddEmailAsync(request.Dto);
+
+       
+            BackgroundJob.Enqueue(() => _emailService.ProcessEmailAsync(messageId, request.Template!.ToString(), request.Data));
 
             return Ok(new ApiResponse { Message = "Повідомлення прийнято для відправлення, перевірте статус", Data = messageId });
         }
 
-
+        //[Authorize(Roles = "Admin")]
         [HttpGet("{id:guid}")]
-
         public async Task<IActionResult>  GetStatus (Guid id)
         {
             var result = await _emailService.GetByIdAsync(id);
@@ -40,6 +48,7 @@ namespace EmailService.Api.Controllers
         }
 
 
+        //[Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetMessages([FromQuery] EmailQuery query)
         {
@@ -57,6 +66,7 @@ namespace EmailService.Api.Controllers
         }
 
 
+        //[Authorize(Roles = "Admin")]
         [HttpPut("update/{id:guid}")]
         public async Task<IActionResult> UpdateMessage(Guid id, [FromBody] EmailMessageDto dto)
         {

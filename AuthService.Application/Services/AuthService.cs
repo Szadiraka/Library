@@ -2,6 +2,7 @@
 using AuthService.Application.Interfaces;
 using AuthService.Application.Mapper;
 using AuthService.Domain.Entities;
+using AuthService.Domain.Enums;
 using AuthService.Domain.Exceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
@@ -14,15 +15,15 @@ using System.Text;
 
 namespace AuthService.Application.Services
 {
-    public class _AuthService : IAuthInterface
+    public class AuthService : IAuthInterface
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IJwtTokenService _jwtTokenService;
-        private readonly IEmailService _emailService;
+        private readonly IEmailNotificationService _emailService;
         private readonly IConfiguration _configuration;
 
-        public _AuthService(UserManager<AppUser> userManager, IJwtTokenService jwtTokenService,
-            IConfiguration configuration, IEmailService emailService)
+        public AuthService(UserManager<AppUser> userManager, IJwtTokenService jwtTokenService,
+            IConfiguration configuration, IEmailNotificationService emailService)
         {
             _userManager = userManager;
 
@@ -179,7 +180,8 @@ namespace AuthService.Application.Services
             //повертаємо на почту користувача посилання для підтвердження
             var confirmationLink = $"{_configuration["Client:Url_Server"]}/api/auth/confirm-email?userId={user.Id}&token={encodedToken}";
 
-            await _emailService.SendEmailConfirmationAsync(user.Email!, confirmationLink);
+         
+            await _emailService.SendEmailAsync(user,EmailTemplate.EmailConfirmation, confirmationLink);
         }
 
 
@@ -188,7 +190,6 @@ namespace AuthService.Application.Services
            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
                 throw new NotFoundException("Користувача не знайдено");
-
          
                 var decodedToken = WebEncoders.Base64UrlDecode(token);
 
@@ -196,13 +197,16 @@ namespace AuthService.Application.Services
 
                 var result = await _userManager.ConfirmEmailAsync(user, normalToken);
 
+          
+
             if (!result.Succeeded)
             {
-                await _emailService.SendEmailAsync(user.Email!,"Не вдалося підтвердити email. Токен недійсний або прострочений.");
+              
+                await _emailService.SendEmailAsync(user,EmailTemplate.ConfirmedEmail,"Не вдалося підтвердити email. Токен недійсний або прострочений.");
                 throw new BusinessRuleException("Недійсний або просрочений токен");
             }
             string msg = "Вашу почту підтверджено";
-            await _emailService.SendEmailAsync(user.Email!, msg);
+            await _emailService.SendEmailAsync(user,EmailTemplate.ConfirmedEmail, msg);
             return new ConfirmEmailResponseDto(){ Message=msg};
            
 
@@ -223,7 +227,8 @@ namespace AuthService.Application.Services
             //повертаємо  на UI- посилання для генерації нового пароля
             var resetLink = $"{_configuration["Client:Url_Client"]}/reset-password?userId={user.Id}&token={encodedToken}";
 
-            await _emailService.SendEmailAsync(email, $"Для відновлення пароля перейдіть за посиланням: {resetLink}");
+          
+            await _emailService.SendEmailAsync(user, EmailTemplate.PasswordForgot, resetLink);
         }
 
         public async Task ResetPasswordAsync(ResetPasswordDto dto)
@@ -241,9 +246,8 @@ namespace AuthService.Application.Services
             if (!result.Succeeded)
             {
                 throw new BusinessRuleException("Не вдалося скинути пароль");
-            }
-
-            await _emailService.SendEmailAsync(user.Email, "Пароль було успішно змінено");
+            }        
+            await _emailService.SendEmailAsync(user,EmailTemplate.ResetPassword, "Вітаємо дорогий клієнт! Ваш пароль успішно змінено.");
                
 
 
@@ -282,12 +286,10 @@ namespace AuthService.Application.Services
             var token = await _userManager.GenerateChangeEmailTokenAsync(user,newEmail);
 
             var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
-
-     
-            var confirmationLink = $"Ваш код для варифікації вашого email: {encodedToken}";
-
-            await _emailService.SendEmailConfirmationAsync(user.Email!, confirmationLink);
+          
+            await _emailService.SendEmailAsync(user, EmailTemplate.ChangeEmail, encodedToken);
         }
+
 
         public async Task ConfirmEmailChangeAsync(string? userId, ConfirmEmailChangeDto dto)
         {

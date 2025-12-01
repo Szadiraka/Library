@@ -21,6 +21,7 @@ namespace EmailService.Api
             builder.Services.AddScoped<IEmailService, EmailsService>();
             builder.Services.AddScoped<IEmailRepository, EmailRepository>();
             builder.Services.AddScoped<IEmailSender, EmailSender>();
+            builder.Services.AddScoped<IEmailTemplateService, EmailTemplateService>();
 
 
 
