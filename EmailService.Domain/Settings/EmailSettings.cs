@@ -7,7 +7,7 @@ namespace EmailService.Domain.Settings
         public string From { get; set; } = string.Empty;
         public string Host { get; set; } = string.Empty;
         public int Port { get; set; }
-        public bool SSL { get; set; }
+        public string SecureSocketOption { get; set; } = string.Empty;
         public string Username { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
     }

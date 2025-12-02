@@ -3,6 +3,7 @@ using MimeKit;
 using MailKit.Net.Smtp;
 using EmailService.Domain.Settings;
 using Microsoft.Extensions.Options;
+using MailKit.Security;
 
 
 namespace EmailService.Infrastructure.Services
@@ -29,7 +30,9 @@ namespace EmailService.Infrastructure.Services
 
             using var client = new SmtpClient();
 
-            await client.ConnectAsync(_settings.Host,_settings.Port, _settings.SSL);
+            SecureSocketOptions options = SecureSocketOptions.StartTls;
+
+            await client.ConnectAsync(_settings.Host,_settings.Port, options);
 
             await client.AuthenticateAsync(_settings.Username, _settings.Password);
 

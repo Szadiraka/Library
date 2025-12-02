@@ -20,18 +20,18 @@ namespace AuthService.Infrastructure.Services
         public async Task SendEmailRequestAsync(EmailRequest request, string apiToken)
         {      
 
-            var requestMessage = new HttpRequestMessage(HttpMethod.Post, "api/email/send")
+            var requestMessage = new HttpRequestMessage(HttpMethod.Post, "/api/email/send")
             {
                 Content = new StringContent(JsonSerializer.Serialize(request),Encoding.UTF8,"application/json" )
             };
-            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer ", apiToken);
+            requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Bearer", apiToken);
 
             var response = await _httpClient.SendAsync(requestMessage);
 
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content.ReadAsStringAsync();
-                throw new ConflictException($"Не вдалось відправити повідомлення. ПомилкаЖ {error}");
+                throw new ConflictException($"Не вдалось відправити повідомлення. Помилка: {error}");
             }
              
 

@@ -2,7 +2,6 @@
 using AuthService.Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -58,7 +57,6 @@ namespace AuthService.Application.Services
                 return Convert.ToBase64String(randomNumber);
             
         }
-
 
 
         public string GenerateToken(AppUser user, IList<string> roles)

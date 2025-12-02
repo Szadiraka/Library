@@ -19,6 +19,11 @@ namespace AuthService.Api.Middleware
         {
             var sw = Stopwatch.StartNew();
             _logger.LogInformation("HTTP {Method} {Path} started", context.Request.Method, context.Request.Path);
+            
+            if (context.Response.StatusCode == 307)
+            {
+                _logger.LogWarning("REDIRECT occurred – check HTTPS + Authorization header");
+            }
 
             await _next(context);
 

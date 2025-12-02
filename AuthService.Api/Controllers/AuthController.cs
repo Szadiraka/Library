@@ -75,7 +75,7 @@ namespace AuthService.Api.Controllers
 
         //-------------------------------------------------------
 
-        //метод не проверен
+        
         [Authorize]
         [HttpPost("send-confirmation-email")]
         public async Task<IActionResult> SendEmailConfirmation()

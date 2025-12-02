@@ -26,11 +26,13 @@ namespace EmailService.Application.Services
            var message = await _repository.GetByIdAsync(messageId);
             if (message == null)
                 throw new NotFoundException("повідомлення не знайдено");
+
+          
             try
             {
                 var html = await _templateService.RenderTemplateAsync(template, data);             
 
-                await _sender.SendEmailAsync(message.To, message.Subject, message.Body);
+                await _sender.SendEmailAsync(message.To, message.Subject, html);
                 message.IsSent = true;
             }
             catch (Exception ex)
@@ -42,6 +44,8 @@ namespace EmailService.Application.Services
             {
                 message.SentAt = DateTime.Now;
                 await _repository.UpdateAsync(message);
+                if(message.IsSent == false)
+                    throw new ConflictException(message.ErrorMessage??"неможливо відправити повідомлення");
             }         
 
         }

@@ -36,7 +36,7 @@ namespace AuthService.Application.Services
             {
                 UserId = Guid.Parse(user.Id),
                 To = user.Email ?? throw new NotFoundException("Eлектронна адреса користувача не знайдена"),              
-                Body = "",
+                Body = "body",
             };
 
             var Data = new Dictionary<string, string>();

@@ -21,7 +21,7 @@ namespace EmailService.Infrastructure.Services
 
             foreach(var item in data)
             {
-                html = html.Replace($"{{{item.Key}}}", item.Value);
+                html = html.Replace($"{{{{{item.Key}}}}}", item.Value);
             }
 
             if (html.Contains("{{") && html.Contains("}}"))

@@ -20,7 +20,7 @@ namespace EmailService.Api.Controllers
             _emailService = emailService;
         }
 
-        //[Authorize(Roles = "AuthService")]
+        [Authorize(Roles = "AuthService")]
         [HttpPost("send")]
         public async Task<IActionResult> SendEmail([FromBody] EmailRequest request)
         {

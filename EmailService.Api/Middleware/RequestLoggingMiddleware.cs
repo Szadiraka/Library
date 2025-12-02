@@ -19,7 +19,7 @@ namespace EmailService.Api.Middleware
         {
             var sw = Stopwatch.StartNew();
             _logger.LogInformation("HTTP {Method} {Path} started", context.Request.Method, context.Request.Path);
-
+          
             await _next(context);
 
             sw.Stop();
