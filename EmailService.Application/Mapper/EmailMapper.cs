@@ -52,5 +52,18 @@ namespace EmailService.Application.Mapper
 
         }
 
+
+        public static void EntityToEntity(EmailMessage from, EmailMessage to)
+        {
+            to.UserId = from.UserId;
+            to.Body = from.Body;
+            to.Subject = from.Subject;
+            to.To = from.To;
+            to.UserId = from.UserId;
+            to.ErrorMessage = from.ErrorMessage;
+        }
+
     }
+
+    
 }

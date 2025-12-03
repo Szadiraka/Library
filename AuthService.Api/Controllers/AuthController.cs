@@ -87,7 +87,7 @@ namespace AuthService.Api.Controllers
         }
 
 
-        [AllowAnonymous]
+      
         [HttpGet("confirm-email")]
    
         public async Task<IActionResult> ConfirmEmail([FromQuery] ConfirmEmailRequestDto request)
@@ -100,10 +100,7 @@ namespace AuthService.Api.Controllers
 
         //-------------------------------------------------------
 
-
-        //метод не проверен
-
-        [AllowAnonymous]
+    
         [HttpPost("forgot-password")]     
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
         {
@@ -127,8 +124,7 @@ namespace AuthService.Api.Controllers
         }
 
         //------------------------------------------------------------------
-
-        // не проверен
+      
 
         [Authorize]
         [HttpPut("change-password")]  
@@ -142,7 +138,7 @@ namespace AuthService.Api.Controllers
             return Ok(new ApiResponse { Message = "Ваш пароль було успішно змінено" });
         }
 
-        //не перевірен
+    
 
         [Authorize]
         [HttpPost("change-email-request")]

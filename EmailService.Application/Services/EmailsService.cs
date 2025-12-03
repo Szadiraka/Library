@@ -59,6 +59,10 @@ namespace EmailService.Application.Services
             return message.Id;
         }
 
+
+
+
+
         public async Task<EmailMessageDto> GetByIdAsync(Guid id)
         {
            var result = await _repository.GetByIdAsync(id);         

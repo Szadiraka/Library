@@ -216,10 +216,10 @@ namespace AuthService.Application.Services
 
         public async Task ForgotPasswordAsync(string email)
         {
-            var user = await _userManager.FindByIdAsync(email);
+            var user = await _userManager.FindByEmailAsync(email);
 
             if (user == null)
-                return;
+                throw new NotFoundException("Користувача не знайдено");
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
@@ -267,7 +267,7 @@ namespace AuthService.Application.Services
             if (!result.Succeeded)
             {
                 var errors = string.Join(", ", result.Errors.Select(x => x.Description));
-                throw new BusinessRuleException("Не вдалося змінити пароль: {errors}");
+                throw new BusinessRuleException($"Не вдалося змінити пароль: {errors}");
             }
                 
         }

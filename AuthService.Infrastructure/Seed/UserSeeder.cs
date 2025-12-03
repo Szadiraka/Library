@@ -9,14 +9,16 @@ namespace AuthService.Infrastructure.Seed
 
         public static async Task SeedAdminAsync(UserManager<AppUser> userManager)
         {
-            var adminUser = await userManager.FindByEmailAsync("admin@example.com");
+            var adminUser = await userManager.FindByEmailAsync("szadyraka0509@gmail");
             if (adminUser == null)
             {
                 adminUser = new AppUser
                 {
                     UserName = "admin",
-                    Email = "admin@example.com",
-                    EmailConfirmed = true
+                    Email = "szadyraka0509@gmail.com",
+                    EmailConfirmed = true,
+                    FirstName = "Admin",
+                    LastName = "Admin"
                 };
 
                 var result = await userManager.CreateAsync(adminUser, "Admin123!");

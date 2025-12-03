@@ -1,4 +1,5 @@
 ﻿using EmailService.Application.Exceptions;
+using EmailService.Application.Mapper;
 using EmailService.Domain.Entities;
 using EmailService.Domain.Interfaces;
 using EmailService.Domain.Queries;
@@ -24,6 +25,7 @@ namespace EmailService.Infrastructure.Services
            await _context.SaveChangesAsync();
         }
 
+
         public async Task<EmailMessage> GetByIdAsync(Guid id)
         {
           var result = await _context.EmailMessages.FirstOrDefaultAsync(x => x.Id == id);
@@ -36,7 +38,7 @@ namespace EmailService.Infrastructure.Services
         {
             var emails = _context.EmailMessages.AsQueryable();
 
-            if(query.UserId != Guid.Empty  || query.UserId != null)
+            if(query.UserId != Guid.Empty  && query.UserId != null)
             {
                 emails = emails.Where(x => x.UserId == query.UserId);
             }
@@ -46,7 +48,7 @@ namespace EmailService.Infrastructure.Services
                 emails = emails.Where(x => x.IsSent == query.IsSent);
             }
 
-            if(string.IsNullOrEmpty(query.To))
+            if(!string.IsNullOrEmpty(query.To))
             {
                 emails = emails.Where(x=> x.To == query.To);
             }           
@@ -71,18 +73,23 @@ namespace EmailService.Infrastructure.Services
         public async Task UpdateAsync(EmailMessage message)
         {
             var curentMessage = await GetByIdAsync(message.Id);
+           
             if (curentMessage == null)
                 throw new NotFoundException("повідомлення не знайдено");
+       
+            EmailMapper.EntityToEntity(message, curentMessage);
 
-            _context.EmailMessages.Update(message);
+            _context.EmailMessages.Update(curentMessage);
 
             await _context.SaveChangesAsync();
         }
 
+
+
         public async Task DeleteAsync(Guid id)
         {
             var message = await _context.EmailMessages.FirstOrDefaultAsync(x=> x.Id == id);
-            if (message != null)
+            if (message == null)
                 throw new NotFoundException("повідомлення не знайдено");
 
             _context.EmailMessages.Remove(message);

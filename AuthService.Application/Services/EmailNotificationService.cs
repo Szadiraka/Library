@@ -55,7 +55,7 @@ namespace AuthService.Application.Services
                     Data.Add("Message", payload);
                     break;
                 case EmailTemplate.PasswordForgot:
-                    dto.Subject = "Зміна паролю";
+                    dto.Subject = "Запит на зміну паролю";
                     Data.Add("ResetLink", payload);
                     break;
                 case EmailTemplate.ResetPassword:
@@ -65,7 +65,7 @@ namespace AuthService.Application.Services
                 case EmailTemplate.ChangeEmail:
                     dto.Subject = "Зміна електроної адреси";
                     Data.Add("Token", payload);
-                    Data.Add("Message", "Ваша електрона адреса успішно змінена.");
+                    Data.Add("Message", "Для зміни вашої електронної адреси у додатку 'Library' скопіюйте наданий пароль");
                     break;
                 default:
                     dto.Subject = "Неважливе повідомлення";

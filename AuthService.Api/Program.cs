@@ -46,7 +46,7 @@ namespace AuthService.Api
 
             app.MapControllers();
 
-            await app.SeedIdentity();
+            //await app.SeedIdentity();
 
             app.Run();
         }

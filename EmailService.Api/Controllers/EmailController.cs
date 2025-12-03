@@ -38,7 +38,11 @@ namespace EmailService.Api.Controllers
             return Ok(new ApiResponse { Message = "Повідомлення прийнято для відправлення, перевірте статус", Data = messageId });
         }
 
-        //[Authorize(Roles = "Admin")]
+
+
+
+
+        [Authorize(Roles = "Admin")]
         [HttpGet("{id:guid}")]
         public async Task<IActionResult>  GetStatus (Guid id)
         {
@@ -48,7 +52,7 @@ namespace EmailService.Api.Controllers
         }
 
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetMessages([FromQuery] EmailQuery query)
         {
@@ -57,6 +61,7 @@ namespace EmailService.Api.Controllers
             return Ok(new ApiResponse { Message = "Інформацію успішно отримано", Data = result });
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteMessage(Guid id)
         {
@@ -66,7 +71,7 @@ namespace EmailService.Api.Controllers
         }
 
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPut("update/{id:guid}")]
         public async Task<IActionResult> UpdateMessage(Guid id, [FromBody] EmailMessageDto dto)
         {
