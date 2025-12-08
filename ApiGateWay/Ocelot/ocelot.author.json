@@ -1,0 +1,106 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/author/{id}",
+      "DownstreamPathTemplate": "/api/author/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5130
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "DownstreamHeaderTransform": { "Authorization": "Authorization" }
+    },
+    {
+      "UpstreamPathTemplate": "/author",
+      "DownstreamPathTemplate": "/api/author",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5130
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "UpstreamPathTemplate": "/author/create",
+      "DownstreamPathTemplate": "/api/author/create",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5130
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": { "role": "Admin,Librarian" },
+      "DownstreamHeaderTransform": { "Authorization": "Authorization" }
+    },
+    {
+      "UpstreamPathTemplate": "/author/update/{id}",
+      "DownstreamPathTemplate": "/api/author/update/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5130
+        }
+      ],
+      "UpstreamHttpMethod": [ "PUT" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": { "role": "Admin,Librarian" },
+      "DownstreamHeaderTransform": { "Authorization": "Authorization" }
+    },
+    {
+      "UpstreamPathTemplate": "/author/delete/{id}",
+      "DownstreamPathTemplate": "/api/author/delete/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5130
+        }
+      ],
+      "UpstreamHttpMethod": [ "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": { "role": "Admin,Librarian" },
+      "DownstreamHeaderTransform": { "Authorization": "Authorization" }
+    },
+    {
+      "UpstreamPathTemplate": "/author/exists",
+      "DownstreamPathTemplate": "/api/author/exists",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5130
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": { "role": "Admin,Librarian" },
+      "DownstreamHeaderTransform": { "Authorization": "Authorization" }
+    }
+  ]
+}
+

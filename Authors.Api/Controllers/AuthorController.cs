@@ -54,7 +54,7 @@ namespace Authors.Api.Controllers
 
 
         [Authorize(Roles = "Admin,Librarian")]
-        [HttpPut("{id:guid}")]
+        [HttpPut("update/{id:guid}")]
         public async Task<IActionResult> UpdateAuthor(Guid id, [FromBody] AuthorDto dto)
         {
             if (!ModelState.IsValid)
@@ -67,7 +67,7 @@ namespace Authors.Api.Controllers
 
 
         [Authorize(Roles = "Admin,Librarian")]
-        [HttpDelete("{id:guid}")]
+        [HttpDelete("delete/{id:guid}")]
 
         public async Task<IActionResult> DeleteAuthor(Guid id)
         {

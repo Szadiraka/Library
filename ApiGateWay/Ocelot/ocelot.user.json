@@ -1,0 +1,61 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/user/me",
+      "DownstreamPathTemplate": "/api/user/me",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5120
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "DownstreamHeaderTransform": {
+        "Authorization": "Authorization"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/user/update-profile",
+      "DownstreamPathTemplate": "/api/user/update-profile",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5120
+        }
+      ],
+      "UpstreamHttpMethod": [ "PUT" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "DownstreamHeaderTransform": {
+        "Authorization": "Authorization"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/user/update-avatar",
+      "DownstreamPathTemplate": "/api/user/update-avatar",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5120
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "DownstreamHeaderTransform": {
+        "Authorization": "Authorization"
+      }
+    }
+  ]
+}

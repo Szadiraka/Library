@@ -1,0 +1,149 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/admin/restore-account",
+      "DownstreamPathTemplate": "/api/admin/restore-account",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5140
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": { "role": "Admin" },
+      "DownstreamHeaderTransform": { "Authorization": "Authorization" }
+    },
+    {
+      "UpstreamPathTemplate": "/admin/block-user",
+      "DownstreamPathTemplate": "/api/admin/block-user",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5140
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": { "role": "Admin" },
+      "DownstreamHeaderTransform": { "Authorization": "Authorization" }
+    },
+    {
+      "UpstreamPathTemplate": "/admin/unblock-user",
+      "DownstreamPathTemplate": "/api/admin/unblock-user",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5140
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": { "role": "Admin" },
+      "DownstreamHeaderTransform": { "Authorization": "Authorization" }
+    },
+    {
+      "UpstreamPathTemplate": "/admin/users-blocked",
+      "DownstreamPathTemplate": "/api/admin/users-blocked",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5140
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": { "role": "Admin" },
+      "DownstreamHeaderTransform": { "Authorization": "Authorization" }
+    },
+    {
+      "UpstreamPathTemplate": "/admin/users/{userId}",
+      "DownstreamPathTemplate": "/api/admin/users/{userId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5140
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": { "role": "Admin" },
+      "DownstreamHeaderTransform": { "Authorization": "Authorization" }
+    },
+    {
+      "UpstreamPathTemplate": "/admin/users",
+      "DownstreamPathTemplate": "/api/admin/users",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5140
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": { "role": "Admin" },
+      "DownstreamHeaderTransform": { "Authorization": "Authorization" }
+    },
+    {
+      "UpstreamPathTemplate": "/admin/add-role",
+      "DownstreamPathTemplate": "/api/admin/add-role",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5140
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": { "role": "Admin" },
+      "DownstreamHeaderTransform": { "Authorization": "Authorization" }
+    },
+    {
+      "UpstreamPathTemplate": "/admin/remove-role",
+      "DownstreamPathTemplate": "/api/admin/remove-role",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5140
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": { "role": "Admin" },
+      "DownstreamHeaderTransform": { "Authorization": "Authorization" }
+    }
+  ]
+}
+

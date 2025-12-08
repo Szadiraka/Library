@@ -1,0 +1,58 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/bookauthor/create",
+      "DownstreamPathTemplate": "/api/bookauthor/create",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5170
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": { "role": "Admin,Librarian" },
+      "DownstreamHeaderTransform": { "Authorization": "Authorization" }
+    },
+    {
+      "UpstreamPathTemplate": "/bookauthor/delete",
+      "DownstreamPathTemplate": "/api/bookauthor/delete",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5170
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": { "role": "Admin,Librarian" },
+      "DownstreamHeaderTransform": { "Authorization": "Authorization" }
+    },
+    {
+      "UpstreamPathTemplate": "/bookauthor/authors_id/{bookId}",
+      "DownstreamPathTemplate": "/api/bookauthor/authors_id/{bookId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5170
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": { "role": "Admin,Librarian" },
+      "DownstreamHeaderTransform": { "Authorization": "Authorization" }
+    }
+  ]
+}

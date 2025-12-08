@@ -62,7 +62,7 @@ namespace EmailService.Api.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpDelete("{id:guid}")]
+        [HttpDelete("delete/{id:guid}")]
         public async Task<IActionResult> DeleteMessage(Guid id)
         {
             await _emailService.DeleteAsync(id);

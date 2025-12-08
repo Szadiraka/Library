@@ -1,6 +1,6 @@
 ﻿using BooksService.Application.DTOs;
 using BooksService.Application.Interfaces;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BooksService.Api.Controllers
@@ -17,7 +17,7 @@ namespace BooksService.Api.Controllers
         }
 
 
-        //[Authorize(Roles = "Admin,Librarian")]
+        [Authorize(Roles = "Admin,Librarian")]
         [HttpPost("create")]
         public async Task<IActionResult> CreateBookAuthor([FromBody] BookAuthorDto dto)
         {
@@ -31,7 +31,7 @@ namespace BooksService.Api.Controllers
         }
 
 
-        //[Authorize(Roles = "Admin,Librarian")]
+        [Authorize(Roles = "Admin,Librarian")]
         [HttpPost("delete")]
         public async Task<IActionResult> DeleteBookAuthor([FromBody] BookAuthorDto dto)
         {
@@ -40,7 +40,7 @@ namespace BooksService.Api.Controllers
         }
 
 
-        //[Authorize(Roles = "Admin,Librarian")]
+        [Authorize(Roles = "Admin,Librarian")]
         [HttpGet("authors_id/{bookId:guid}")]
         public async Task<IActionResult> GetAuthorsIdsByBookId(Guid bookId)
         {

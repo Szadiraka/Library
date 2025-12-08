@@ -1,0 +1,146 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/genres/{id}",
+      "DownstreamPathTemplate": "/api/genres/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5160
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "DownstreamHeaderTransform": { "Authorization": "Authorization" }
+    },
+    {
+      "UpstreamPathTemplate": "/genres",
+      "DownstreamPathTemplate": "/api/genres",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5160
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "DownstreamHeaderTransform": { "Authorization": "Authorization" }
+    },
+    {
+      "UpstreamPathTemplate": "/genres/deleted-genres",
+      "DownstreamPathTemplate": "/api/genres/deleted-genres",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5160
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": { "role": "Admin,Librarian" },
+      "DownstreamHeaderTransform": { "Authorization": "Authorization" }
+    },
+    {
+      "UpstreamPathTemplate": "/genres/restore-genre/{id}",
+      "DownstreamPathTemplate": "/api/genres/restore-genre/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5160
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": { "role": "Admin,Librarian" },
+      "DownstreamHeaderTransform": { "Authorization": "Authorization" }
+    },
+    {
+      "UpstreamPathTemplate": "/genres/create",
+      "DownstreamPathTemplate": "/api/genres/create",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5160
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": { "role": "Admin,Librarian" },
+      "DownstreamHeaderTransform": { "Authorization": "Authorization" }
+    },
+    {
+      "UpstreamPathTemplate": "/genres/update/{id}",
+      "DownstreamPathTemplate": "/api/genres/update/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5160
+        }
+      ],
+      "UpstreamHttpMethod": [ "PUT" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": { "role": "Admin,Librarian" },
+      "DownstreamHeaderTransform": { "Authorization": "Authorization" }
+    },
+    {
+      "UpstreamPathTemplate": "/genres/delete/{id}",
+      "DownstreamPathTemplate": "/api/genres/delete/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5160
+        }
+      ],
+      "UpstreamHttpMethod": [ "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": { "role": "Admin,Librarian" },
+      "DownstreamHeaderTransform": { "Authorization": "Authorization" }
+    },
+    {
+      "UpstreamPathTemplate": "/genres/exists",
+      "DownstreamPathTemplate": "/api/genres/exists",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5160
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": { "role": "Admin,Librarian" },
+      "DownstreamHeaderTransform": { "Authorization": "Authorization" }
+    }
+  ]
+}

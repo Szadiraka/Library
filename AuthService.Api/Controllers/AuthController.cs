@@ -47,13 +47,13 @@ namespace AuthService.Api.Controllers
 
         }
 
-
+     
         [HttpPost("refresh-token")]
         public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest request)
         {
+          
             if (!ModelState.IsValid)
                 return BadRequest(new ApiResponse { Message = "Не коректний запит" });
-
 
             var response = await _authService.RefreshTokenAsync(request.Token, request.RefreshToken);
             return Ok(new ApiResponse { Message = "токен успішно оновлено", Data = response });

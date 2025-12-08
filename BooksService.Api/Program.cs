@@ -31,7 +31,7 @@ namespace BooksService.Api
             var app = builder.Build();
             app.UseMiddleware<RequestLoggingMiddleware>();
             app.UseMiddleware<GlobalExceptionMiddleware>();
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
 

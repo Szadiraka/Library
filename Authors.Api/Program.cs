@@ -29,7 +29,7 @@ namespace Authors.Api
             app.UseMiddleware<GlobalExceptionMiddleware>();
 
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();

@@ -1,0 +1,171 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/auth/register",
+      "DownstreamPathTemplate": "/api/auth/register",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5120
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "UpstreamPathTemplate": "/auth/login",
+      "DownstreamPathTemplate": "/api/auth/login",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5120
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "UpstreamPathTemplate": "/auth/logout",
+      "DownstreamPathTemplate": "/api/auth/logout",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5120
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "UpstreamPathTemplate": "/auth/confirm-email",
+      "DownstreamPathTemplate": "/api/auth/confirm-email",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5120
+        }
+      ],
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "UpstreamPathTemplate": "/auth/forgot-password",
+      "DownstreamPathTemplate": "/api/auth/forgot-password",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5120
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "UpstreamPathTemplate": "/auth/reset-password",
+      "DownstreamPathTemplate": "/api/auth/reset-password",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5120
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "UpstreamPathTemplate": "/auth/send-confirmation-email",
+      "DownstreamPathTemplate": "/api/auth/send-confirmation-email",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5120
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "DownstreamHeaderTransform": {
+        "Authorization": "Authorization"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/auth/change-password",
+      "DownstreamPathTemplate": "/api/auth/change-password",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5120
+        }
+      ],
+      "UpstreamHttpMethod": [ "PUT" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "DownstreamHeaderTransform": {
+        "Authorization": "Authorization"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/auth/change-email-request",
+      "DownstreamPathTemplate": "/api/auth/change-email-request",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5120
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "DownstreamHeaderTransform": {
+        "Authorization": "Authorization"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/auth/confirm-email-request",
+      "DownstreamPathTemplate": "/api/auth/confirm-email-request",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5120
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "DownstreamHeaderTransform": {
+        "Authorization": "Authorization"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/auth/delete-account",
+      "DownstreamPathTemplate": "/api/auth/delete-account",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5120
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "DownstreamHeaderTransform": {
+        "Authorization": "Authorization"
+      }
+    }
+  ]
+}

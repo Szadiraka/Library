@@ -30,7 +30,7 @@ namespace EmailService.Api
             app.UseMiddleware<GlobalExceptionMiddleware>();
 
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
 
