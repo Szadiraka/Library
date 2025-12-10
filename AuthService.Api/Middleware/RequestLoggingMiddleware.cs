@@ -17,8 +17,10 @@ namespace AuthService.Api.Middleware
 
         public async Task InvokeAsync(HttpContext context)
         {
+            var cid = context.Items["X-Correlation-Id"]?.ToString();
+
             var sw = Stopwatch.StartNew();
-            _logger.LogInformation("HTTP {Method} {Path} started", context.Request.Method, context.Request.Path);
+            _logger.LogInformation("HTTP {Method} {Path} started, CID: {cid}", context.Request.Method, context.Request.Path, cid);
             
             if (context.Response.StatusCode == 307)
             {
@@ -29,8 +31,8 @@ namespace AuthService.Api.Middleware
 
             sw.Stop();
 
-            _logger.LogInformation("HTTP {Method} {Path} finished with status {StatusCode} in {Elapsed} ms",
-                context.Request.Method, context.Request.Path, context.Response.StatusCode, sw.ElapsedMilliseconds);
+            _logger.LogInformation("HTTP {Method} {Path} finished with status {StatusCode} in {Elapsed} ms, CID: {cid}",
+                context.Request.Method, context.Request.Path, context.Response.StatusCode, sw.ElapsedMilliseconds, cid);
         }
 
     }

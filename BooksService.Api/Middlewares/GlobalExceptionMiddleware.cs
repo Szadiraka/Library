@@ -24,13 +24,15 @@ namespace BooksService.Api.Middlewares
             }
             catch (Exception ex)
             {
-                _logger.LogWarning("Помилка для запиту {Method} {Pass} Mistake:{}", context.Request.Method, context.Request.Path, ex.Message);
+                var cid = context.Items["X-Correlation-Id"]?.ToString();
+
+                _logger.LogWarning("Помилка для запиту {Method} {Pass} Mistake:{}. CID: {cid}", context.Request.Method, context.Request.Path, ex.Message, cid);
 
                 var statusCode = MapExceptionToStatusCode(ex);
 
                 if (context.Response.HasStarted)
                 {
-                    _logger.LogWarning("Відповідь вже розпочата, використання відповіді не можливе.");
+                    _logger.LogWarning("Відповідь вже розпочата, використання відповіді не можливе. CID: {cid}", cid);
                     throw;
                 }
 

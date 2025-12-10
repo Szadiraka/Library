@@ -65,7 +65,7 @@ namespace BooksService.Application.Services
         {
             var book = await _repo.GetBookByIdAsync(id);
             if (book == null)
-                throw new NotFoundException("жанр не знайдено");
+                throw new NotFoundException("книгу не знайдено");
 
             return BookMapper.ToBookDto(book);
         }

@@ -13,7 +13,8 @@ namespace EmailService.Api
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);   
+            var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddHealthChecks();
             builder.Services.AddControllers();
             builder.Services.AddJwtAuth(builder.Configuration);
             builder.Services.AddEmailService(builder.Configuration);
@@ -26,6 +27,7 @@ namespace EmailService.Api
 
 
             var app = builder.Build();
+            app.UseMiddleware<CorrelationMiddleware>();
             app.UseMiddleware<RequestLoggingMiddleware>();
             app.UseMiddleware<GlobalExceptionMiddleware>();
 
@@ -35,6 +37,7 @@ namespace EmailService.Api
             app.UseAuthorization();
 
             app.UseHangfireDashboard("/hangfire");
+            app.MapHealthChecks("/health");
             app.MapControllers();
 
             app.Run();

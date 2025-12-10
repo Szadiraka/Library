@@ -7,7 +7,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5150
+          "Port": 5122
         }
       ],
       "UpstreamHttpMethod": [ "GET" ],
@@ -24,7 +24,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5150
+          "Port": 5122
         }
       ],
       "UpstreamHttpMethod": [ "GET" ],
@@ -41,7 +41,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5150
+          "Port": 5122
         }
       ],
       "UpstreamHttpMethod": [ "GET" ],
@@ -58,7 +58,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5150
+          "Port": 5122
         }
       ],
       "UpstreamHttpMethod": [ "GET" ],
@@ -76,7 +76,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5150
+          "Port": 5122
         }
       ],
       "UpstreamHttpMethod": [ "POST" ],
@@ -94,7 +94,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5150
+          "Port": 5122
         }
       ],
       "UpstreamHttpMethod": [ "POST" ],
@@ -112,7 +112,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5150
+          "Port": 5122
         }
       ],
       "UpstreamHttpMethod": [ "PUT" ],
@@ -130,7 +130,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5150
+          "Port": 5122
         }
       ],
       "UpstreamHttpMethod": [ "DELETE" ],
@@ -148,7 +148,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5150
+          "Port": 5122
         }
       ],
       "UpstreamHttpMethod": [ "GET" ],
@@ -166,7 +166,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5150
+          "Port": 5122
         }
       ],
       "UpstreamHttpMethod": [ "GET" ],

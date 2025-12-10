@@ -1,12 +1,9 @@
-﻿
-
-using BooksService.Application.Exceptions;
+﻿using BooksService.Application.Exceptions;
 using BooksService.Domain.Entities;
 using BooksService.Domain.Interfaces;
 using BooksService.Domain.Queries;
 using BooksService.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 
 namespace BooksService.Infrastructure.Services

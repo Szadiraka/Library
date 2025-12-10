@@ -7,7 +7,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5170
+          "Port": 5122
         }
       ],
       "UpstreamHttpMethod": [ "POST" ],
@@ -25,7 +25,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5170
+          "Port": 5122
         }
       ],
       "UpstreamHttpMethod": [ "POST" ],
@@ -43,7 +43,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5170
+          "Port": 5122
         }
       ],
       "UpstreamHttpMethod": [ "GET" ],

@@ -1,6 +1,13 @@
 {
   "Routes": [],
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:7000"
+    "BaseUrl": "http://localhost:7000",
+    "RateLimitOptions": {
+      "ClientIdHeader": "ClientId",
+      "QuotaExceededMessage": "Ви перевищили ліміт запитів. Спробуйте пізніше.",
+      "RateLimitCounterPrefix": "ocelot_rate_limit"
+    }
+
+
   }
 }

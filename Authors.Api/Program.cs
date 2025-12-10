@@ -1,5 +1,5 @@
 using Authors.Api.Extensions;
-using Authors.Api.Middleware;
+using Authors.Api.Middlewares;
 using Authors.Application.Interfaces;
 using Authors.Application.Services;
 using Authors.Domain.Interfaces;
@@ -14,6 +14,7 @@ namespace Authors.Api
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddHealthChecks();
             builder.Services.AddControllers();
             builder.Services.AddJwtAuth(builder.Configuration);           
 
@@ -25,6 +26,7 @@ namespace Authors.Api
        
 
             var app = builder.Build();
+            app.UseMiddleware<CorrelationMiddleware>(); 
             app.UseMiddleware<RequestLoggingMiddleware>();
             app.UseMiddleware<GlobalExceptionMiddleware>();
 
@@ -32,6 +34,7 @@ namespace Authors.Api
             //app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.MapHealthChecks("/health");
             app.MapControllers();
             app.Run();
         }

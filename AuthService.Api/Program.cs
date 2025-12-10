@@ -13,6 +13,7 @@ namespace AuthService.Api
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddHealthChecks();
 
             builder.Services.AddControllers();
             builder.Services.AddCustomAuthentication(builder.Configuration);
@@ -35,7 +36,7 @@ namespace AuthService.Api
             });
 
             var app = builder.Build();
-
+            app.UseMiddleware<CorrelationMiddleware>();
             app.UseMiddleware<GlobalExceptionMiddleware>();
             app.UseMiddleware<RequestLoggingMiddleware>();
 
@@ -44,6 +45,7 @@ namespace AuthService.Api
 
             //app.UseHttpsRedirection();
 
+            app.MapHealthChecks("/health");
             app.MapControllers();
 
             //await app.SeedIdentity();

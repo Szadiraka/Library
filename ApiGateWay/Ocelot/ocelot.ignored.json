@@ -1,0 +1,23 @@
+{
+  "Routes": [],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:7000",
+    "DownstreamScheme": "http",
+    "UpstreamHttpMethod": [],
+    "BaseUrlForGateway": "",
+    "ServiceDiscoveryProvider": {
+      "Type": "Configuration"
+    },
+    "RateLimitOptions": {
+      "DisableRateLimitHeaders": false
+    },
+    "LoadBalancerOptions": {},
+    "QoSOptions": {},
+    "IgnoredRoutes": [
+      "/health",
+      "/health/gateway",
+      "/health/all"
+    ]
+  }
+}
+

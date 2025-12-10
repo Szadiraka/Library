@@ -13,7 +13,8 @@ namespace BooksService.Api
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);      
+            var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddHealthChecks();
             builder.Services.AddControllers();
             builder.Services.AddJwtAuth(builder.Configuration);
 
@@ -29,12 +30,14 @@ namespace BooksService.Api
 
 
             var app = builder.Build();
+            app.UseMiddleware<CorrelationMiddleware>();
             app.UseMiddleware<RequestLoggingMiddleware>();
             app.UseMiddleware<GlobalExceptionMiddleware>();
             //app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.MapHealthChecks("/health");
             app.MapControllers();
 
             app.Run();

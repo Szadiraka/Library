@@ -1,14 +1,14 @@
 ﻿using System.Diagnostics;
 
-namespace EmailService.Api.Middleware
+namespace ApiGateWay.Middlewares
 {
-    public class RequestLoggingMiddleware
+    public class GateWayLoggingMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly ILogger<RequestLoggingMiddleware> _logger;
+        private readonly ILogger<GateWayLoggingMiddleware> _logger;
 
 
-        public RequestLoggingMiddleware(RequestDelegate next, ILogger<RequestLoggingMiddleware> logger)
+        public GateWayLoggingMiddleware(RequestDelegate next, ILogger<GateWayLoggingMiddleware> logger)
         {
             _next = next;
             _logger = logger;
@@ -19,13 +19,13 @@ namespace EmailService.Api.Middleware
         {
             var cid = context.Items["X-Correlation-Id"]?.ToString();
             var sw = Stopwatch.StartNew();
-            _logger.LogInformation("HTTP {Method} {Path} started, CID: {cid}", context.Request.Method, context.Request.Path, cid);
-          
+            _logger.LogInformation("GateWay request:  {Method} {Path} started, CID: {cid}", context.Request.Method, context.Request.Path, cid);
+
             await _next(context);
 
             sw.Stop();
 
-            _logger.LogInformation("HTTP {Method} {Path} finished with status {StatusCode} in {Elapsed} ms, CID: {cid}",
+            _logger.LogInformation("GateWay response: {Method} {Path} finished with status {StatusCode} in {Elapsed} ms, CID: {cid}",
                 context.Request.Method, context.Request.Path, context.Response.StatusCode, sw.ElapsedMilliseconds, cid);
         }
     }

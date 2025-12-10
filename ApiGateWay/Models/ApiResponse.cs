@@ -1,8 +1,8 @@
 ﻿namespace ApiGateWay.Models
 {
-    public class ApiResponse
+    public class ApiResponse<T>
     {
         public string? Message { get; set; }
-        public object? Data { get; set; }
+        public T? Data { get; set; }
     }
 }

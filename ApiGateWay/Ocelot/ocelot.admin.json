@@ -7,7 +7,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5140
+          "Port": 5120
         }
       ],
       "UpstreamHttpMethod": [ "POST" ],
@@ -25,7 +25,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5140
+          "Port": 5120
         }
       ],
       "UpstreamHttpMethod": [ "POST" ],
@@ -43,7 +43,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5140
+          "Port": 5120
         }
       ],
       "UpstreamHttpMethod": [ "POST" ],
@@ -61,7 +61,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5140
+          "Port": 5120
         }
       ],
       "UpstreamHttpMethod": [ "GET" ],
@@ -79,7 +79,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5140
+          "Port": 5120
         }
       ],
       "UpstreamHttpMethod": [ "GET" ],
@@ -97,10 +97,10 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5140
+          "Port": 5120
         }
       ],
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [ "POST" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -115,7 +115,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5140
+          "Port": 5120
         }
       ],
       "UpstreamHttpMethod": [ "POST" ],
@@ -133,7 +133,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5140
+          "Port": 5120
         }
       ],
       "UpstreamHttpMethod": [ "POST" ],

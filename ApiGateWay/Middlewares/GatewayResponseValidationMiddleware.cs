@@ -19,32 +19,45 @@ namespace ApiGateWay.Middlewares
 
             var originalBody = context.Response.Body;
 
-            using var newStream = new MemoryStream();
-            context.Response.Body = newStream;
-
             try
             {
-                await _next(context);           
+                          
+
+                using var newStream = new MemoryStream();
+                context.Response.Body = newStream;
+
+                await _next(context);
+              
 
                 newStream.Seek(0, SeekOrigin.Begin);
                 var responseBody = await new StreamReader(newStream).ReadToEndAsync();
                 var statusCode = context.Response.StatusCode;
+                context.Response.Body = originalBody;
 
-                if (IsApiResponse(responseBody))
+                if( statusCode >=200 && statusCode < 300 || statusCode == 429)
+                {
+                    newStream.Seek(0, SeekOrigin.Begin);
+                    await newStream.CopyToAsync(originalBody);
+                    return;
+                }
+
+
+                if (statusCode != 429 || IsApiResponse(responseBody))
                 {
                     context.Response.Body = originalBody;
                     context.Response.StatusCode = statusCode;
-                    context.Response.ContentType = "application/json";
+                    context.Response.ContentType = context.Response.ContentType ?? "application/json";
                     await context.Response.WriteAsync(responseBody);
                     return;
                 }
 
+           
+
                 var message = GetMessageByStatusCode(statusCode);
 
-                var wrappedResponse = new ApiResponse() { Message = message, Data = null };
+                var wrappedResponse = new ApiResponse<object>() { Message = message, Data = null };
                 var json = JsonSerializer.Serialize(wrappedResponse);
-
-                context.Response.Body = originalBody;
+              
                 context.Response.StatusCode = statusCode;
                 context.Response.ContentType = "application/json";
                 await context.Response.WriteAsync(json);
@@ -55,10 +68,10 @@ namespace ApiGateWay.Middlewares
                 context.Response.Body = originalBody;
                 string message = $"Внутрішня помилка шлюзу: {ex.Message}";              
 
-                var wrappedResponse = new ApiResponse() { Message = message, Data = null };
+                var wrappedResponse = new ApiResponse<object>() { Message = message, Data = null };
                 var json = JsonSerializer.Serialize(wrappedResponse);
-
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                if (context.Response.StatusCode == 0)
+                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 context.Response.ContentType = "application/json";
                 await context.Response.WriteAsync(json);
 
@@ -77,8 +90,8 @@ namespace ApiGateWay.Middlewares
 
             try
             {
-                var obj = JsonSerializer.Deserialize<ApiResponse>(response);
-                return obj != null;
+                var obj = JsonSerializer.Deserialize<ApiResponse<object>>(response);
+                return obj != null && !string.IsNullOrWhiteSpace(obj.Message);
             }
             catch
             {

@@ -22,6 +22,24 @@
           "Port": 5120
         }
       ],
+      "UpstreamHttpMethod": [ "POST" ],
+      "RateLimitOptions": {
+        "EnableRateLimiting": true,
+        "Limit": 3,
+        "Period": "1m",
+        "PeriodTimespan": 60
+      }
+      },
+    {
+      "UpstreamPathTemplate": "/auth/refresh-token",
+      "DownstreamPathTemplate": "/api/auth/refresh-token",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5120
+        }
+      ],
       "UpstreamHttpMethod": [ "POST" ]
     },
     {
@@ -34,8 +52,16 @@
           "Port": 5120
         }
       ],
-      "UpstreamHttpMethod": [ "POST" ]
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "DownstreamHeaderTransform": {
+        "Authorization": "Authorization"
+      }
     },
+
     {
       "UpstreamPathTemplate": "/auth/confirm-email",
       "DownstreamPathTemplate": "/api/auth/confirm-email",
