@@ -38,6 +38,19 @@ namespace Authors.Api.Controllers
         }
 
 
+        [Authorize]
+        [HttpPost("get-by-ids")]
+        public async Task<IActionResult> GetAllAuthorsByIds([FromBody] AuthorIdsRequest request)
+        {
+            if (!ModelState.IsValid || request.Ids.Count == 0)
+                return BadRequest(new ApiResponse { Message = "Не коректний запит" });
+
+            var authors = await _service.GetAllByIdsAsync(request.Ids);
+            return Ok(new ApiResponse { Message = "Авторів отримано", Data = authors });
+
+        }
+
+
         [Authorize(Roles = "Admin,Librarian")]
         [HttpPost("create")]
         public async Task<IActionResult> CreateAuthor([FromBody] AuthorDto dto)

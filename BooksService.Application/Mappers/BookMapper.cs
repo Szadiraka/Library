@@ -32,7 +32,7 @@ namespace BooksService.Application.Mappers
                 GenreId = book.GenreId, 
                 Genre = book.Genre,
                 IsDeleted = book.IsDeleted,
-                BookAuthors = book.BookAuthors,
+                AuthorIds = book.BookAuthors.Select(x=> x.AuthorId).ToList(),
                 
             };
         }

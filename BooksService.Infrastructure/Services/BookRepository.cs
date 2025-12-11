@@ -51,7 +51,8 @@ namespace BooksService.Infrastructure.Services
 
         public async Task<PagedResult<Book>> GetAllBooksAsync(BookQuery query)
         {
-            var books = _context.Books.Where(x => x.IsDeleted == false).Include(x=>x.Genre).AsQueryable();
+            var books = _context.Books.Where(x => x.IsDeleted == false).Include(x=>x.Genre)
+                .Include(x => x.BookAuthors).AsQueryable();
 
             if (!string.IsNullOrEmpty(query.Title))
             {
@@ -86,7 +87,9 @@ namespace BooksService.Infrastructure.Services
 
         public async Task<PagedResult<Book>> GetAllBooksByAuthorIdAsync(BookAuthorQuery query)
         {
-            var books = _context.Books.Include(x=> x.Genre).AsQueryable();
+            var books = _context.Books.Include(x=> x.Genre)
+                .Include(x => x.BookAuthors)
+                .AsQueryable();
             books = books.Where(x => x.BookAuthors
                    .Any(ba => ba.AuthorId == query.AuthorId));
 
@@ -109,7 +112,8 @@ namespace BooksService.Infrastructure.Services
 
         public async Task<PagedResult<Book>> GetAllBooksByGenreIdAsync(GenreIdQuery query)
         {
-            var books = _context.Books.Include(x => x.Genre).AsQueryable();
+            var books = _context.Books.Include(x => x.Genre)
+                .Include(x => x.BookAuthors).AsQueryable();
             books = books.Where(x => x.GenreId == query.GenreId);                  
 
             var total = await books.CountAsync();
@@ -136,13 +140,18 @@ namespace BooksService.Infrastructure.Services
 
         public async Task<List<Book>> GetAllDeletedBooksAsync()
         {
-            var result = await _context.Books.Where(x => x.IsDeleted == true).Include(x => x.Genre).ToListAsync();
+            var result = await _context.Books.Where(x => x.IsDeleted == true).Include(x => x.Genre)
+                .Include(x => x.BookAuthors)
+                .ToListAsync();
             return result;
         }
 
         public async Task<Book?> GetBookByIdAsync(Guid id)
         {
-            Book? book = await _context.Books.Include(x=> x.Genre).FirstOrDefaultAsync(x => x.Id == id && x.IsDeleted == false);
+            Book? book = await _context.Books
+                .Include(x=> x.Genre)
+                .Include(b=> b.BookAuthors)
+                .FirstOrDefaultAsync(x => x.Id == id && x.IsDeleted == false);
           
             return book;
         }

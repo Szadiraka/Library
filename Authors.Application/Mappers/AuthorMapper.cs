@@ -46,7 +46,15 @@ namespace Authors.Application.Mappers
             };
            
         }
-           
+
+        public static List<AuthorDto> MapToSimpleDtoList(List<Author> entities)
+        {
+            return entities.Select(x => ToAuthorDto(x)).ToList();
+        }
+
+
+
+
         public static void  UpdateData(Author entiry, AuthorDto dto)
         {
             entiry.FullName = dto.FullName;

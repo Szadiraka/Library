@@ -76,6 +76,8 @@ namespace Authors.Infrastructure.Services
 
         }
 
+      
+
         public async Task<Author> GetByIdAsync(Guid id)
         {
             var author =await _context.Authors.FirstOrDefaultAsync(x => x.Id == id);
@@ -91,6 +93,15 @@ namespace Authors.Infrastructure.Services
             await  _context.SaveChangesAsync();
             return author;
 
+        }
+
+
+        public async Task<List<Author>> GetAllAuthorsByIdsAsync(List<Guid> ids)
+        {            
+            var authors = await _context.Authors
+                .Where(x=>ids.Contains(x.Id))
+                .ToListAsync();
+            return authors;
         }
     }
 }

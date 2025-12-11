@@ -17,7 +17,7 @@ namespace ApiGateWay.Models
 
         public bool IsDeleted { get; set; }
 
-        //[JsonIgnore]
-        //public List<BookAuthor> BookAuthors { get; set; } = new List<BookAuthor>();
+       
+        public List<Guid> AuthorIds { get; set; } = new List<Guid>();
     }
 }

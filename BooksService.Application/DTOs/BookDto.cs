@@ -25,8 +25,8 @@ namespace BooksService.Application.DTOs
 
         public bool IsDeleted { get; set; }
 
-        [JsonIgnore]
-        public List<BookAuthor> BookAuthors { get; set; } = new List<BookAuthor>();
+        //[JsonIgnore]
+        public List<Guid> AuthorIds { get; set; } = new List<Guid>();
 
 
     }

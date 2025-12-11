@@ -17,6 +17,8 @@ namespace Authors.Domain.Interfaces
 
         Task DeleteAsync(Guid id );
 
+        Task<List<Author>> GetAllAuthorsByIdsAsync(List<Guid> ids);
+
         
     }
 }

@@ -6,7 +6,6 @@ using Authors.Domain.Domains;
 using Authors.Domain.Interfaces;
 using Authors.Domain.Queries;
 
-
 namespace Authors.Application.Services
 {
    
@@ -78,10 +77,11 @@ namespace Authors.Application.Services
              await _repo.DeleteAsync(id);
         }
 
+        public async Task<List<AuthorDto>> GetAllByIdsAsync(List<Guid> ids)
+        {        
+            var result = await _repo.GetAllAuthorsByIdsAsync(ids);
 
-      
-      
-
-       
+            return AuthorMapper.MapToSimpleDtoList(result);
+        }
     }
 }

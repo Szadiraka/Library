@@ -100,6 +100,23 @@
       },
       "RouteClaimsRequirement": { "role": "Admin,Librarian" },
       "DownstreamHeaderTransform": { "Authorization": "Authorization" }
+    },
+    {
+      "UpstreamPathTemplate": "/author/get-by-ids",
+      "DownstreamPathTemplate": "/api/author/get-by-ids",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5123
+        }
+      ],
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },     
+      "DownstreamHeaderTransform": { "Authorization": "Authorization" }
     }
   ]
 }

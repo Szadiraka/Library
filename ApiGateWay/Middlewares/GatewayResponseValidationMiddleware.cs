@@ -77,10 +77,6 @@ namespace ApiGateWay.Middlewares
 
             }
 
-
-
-
-
             
         }
 
