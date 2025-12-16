@@ -39,7 +39,7 @@ namespace ApiGateWay
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-
+  
             app.UseEndpoints(endpoints => {
                 app.MapHealthChecks("/health");
                 app.MapControllers();
