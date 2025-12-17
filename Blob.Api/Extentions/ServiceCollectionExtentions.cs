@@ -1,4 +1,5 @@
 ﻿using Blob.Application.Dtos;
+using Blob.Application.Exceptions;
 using Blob.Domain.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
@@ -78,30 +79,34 @@ namespace Blob.Api.Extentions
 
         public static IServiceCollection AddBlobService(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddOptions<BlobSettings>()
-                .Bind(configuration.GetSection("BlobSettings"))
-                .ValidateDataAnnotations()
-                .Validate(
-                    s => !string.IsNullOrWhiteSpace(s.Url),"BlobSettings: Url is required")
-                .Validate(
-                    s => !string.IsNullOrWhiteSpace(s.AccessKey), "BlobSettings: AccessKey is required")
-                .Validate(
-                   s => !string.IsNullOrWhiteSpace(s.SecretKey), "BlobSettings: SecretKey is required");
+            var blobSettings = configuration.GetSection("BlobSettings").Get<BlobSettings>();
 
-            services.AddSingleton(sp =>
+            if (blobSettings == null)
+                throw new _ValidationException("BlobSettings секція не міститься в конфігурації");
+
+            if (string.IsNullOrWhiteSpace(blobSettings.Url))
+                throw new _ValidationException("BlobSettings: Url відсутній");
+
+            if (string.IsNullOrWhiteSpace(blobSettings.AccessKey))
+                throw new InvalidOperationException("BlobSettings: AccessKey відсутній");
+
+            if (string.IsNullOrWhiteSpace(blobSettings.SecretKey))
+                throw new InvalidOperationException("BlobSettings: SecretKey вiсутній");
+          
+            services.AddSingleton(blobSettings);
+
+         
+            services.AddSingleton<IMinioClient>(sp =>
             {
-                var settings = sp.GetRequiredService<IOptions<BlobSettings>>().Value;
                 return new MinioClient()
-                .WithEndpoint(settings.Url)
-                .WithCredentials(settings.AccessKey,settings.SecretKey)
-                .Build();
-
-            });         
-
-       
-
+                    .WithEndpoint(blobSettings.Url)
+                    .WithCredentials(blobSettings.AccessKey, blobSettings.SecretKey)
+                    .Build();
+            });
 
             return services;
+
+
         }
 
     }

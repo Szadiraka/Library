@@ -8,6 +8,10 @@ namespace Blob.Application.Dtos
 
         public string? FileName { get; set; }
 
-        public Stream? File { get; set; } 
+        public Stream? Stream { get; set; } 
+
+        public string ContentType { get; set; } = string.Empty;
+
+        public long Length { get; set; }
     }
 }

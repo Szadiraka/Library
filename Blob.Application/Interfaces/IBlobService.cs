@@ -8,7 +8,7 @@ namespace Blob.Application.Interfaces
 
         public Task<List<string>> GetAllFilesAsync(string containerName);
 
-        public Task<Stream> GetFileAsync(string containerName, string fileName);
+        public Task<(MemoryStream,string)> GetFileAsync(string containerName, string fileName);
 
         public Task AddFileAsync(FileDto fileDto);
 

@@ -13,7 +13,7 @@ namespace Blob.Api.Mappers
                 throw new ArgumentNullException(nameof(source.File), "File cannot be null.");
             }
 
-            using var memoryStream = new MemoryStream();
+            var memoryStream = new MemoryStream();
             await source.File.CopyToAsync(memoryStream);
             memoryStream.Position = 0;
 
@@ -21,7 +21,9 @@ namespace Blob.Api.Mappers
             {
                 FileName = source.FileName,
                 BucketName = source.BucketName,
-                File = memoryStream
+                Stream = memoryStream,
+                ContentType = source.File.ContentType,
+                Length = source.File.Length
             };
         }
     }

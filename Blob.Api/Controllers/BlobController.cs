@@ -20,11 +20,16 @@ namespace Blob.Api.Controllers
         [HttpGet("download")]
         public  async Task<IActionResult> GetFile([FromQuery] string bucketname, [FromQuery] string filename)
         {
-           var stream = await  _service.GetFileAsync(bucketname, filename);
-            if (stream == null)
-              return NotFound(new ApiResponse<object> { Message = "Файл не знайдено" });
+            (MemoryStream? stream,string? contentType) = await  _service.GetFileAsync(bucketname, filename);
+            if (stream == null || contentType == null)
+              return NotFound(new ApiResponse<object> { Message = "Файл не знайдено, або відсутні дані" });
+           
+            
+            stream.Position = 0;
+            return File(stream, contentType, filename);
+            
 
-            return File(stream, "application/octet-stream", filename);
+              
         }
 
        
@@ -37,7 +42,7 @@ namespace Blob.Api.Controllers
         }
 
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadFile( [FromBody] FileRequest request)
+        public async Task<IActionResult> UploadFile( [FromForm] FileRequest request)
         {
             if(!ModelState.IsValid)
             {
