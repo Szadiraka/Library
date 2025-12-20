@@ -86,5 +86,15 @@ namespace Blob.Api.Controllers
                 return Ok(new ApiResponse<object> { Message = "Файл перейменовано" });
 ;
         }
+
+
+        [HttpDelete("deletebucket")]
+        public async Task<IActionResult> DeleteBucket([FromQuery] string bucketname)
+        {
+            await _service.RemoveBucketAsync(bucketname);
+
+            return Ok(new ApiResponse<object> { Message = "Backet видалено" });
+
+        }
     }
 }

@@ -114,7 +114,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blob.Domain", "Blob.Domain\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blob.Infrastructure", "Blob.Infrastructure\Blob.Infrastructure.csproj", "{D0D6C5BE-1C84-4B58-857F-EF0E5F4F3DA5}"
 	ProjectSection(ProjectDependencies) = postProject
-		{1508DA59-880E-43CE-8343-0BC08F6E2CA6} = {1508DA59-880E-43CE-8343-0BC08F6E2CA6}
 		{174D89D8-3E85-4EF7-8196-0397D84F0A50} = {174D89D8-3E85-4EF7-8196-0397D84F0A50}
 	EndProjectSection
 EndProject

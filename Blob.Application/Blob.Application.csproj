@@ -10,4 +10,8 @@
     <PackageReference Include="Minio" Version="7.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Blob.Domain\Blob.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
