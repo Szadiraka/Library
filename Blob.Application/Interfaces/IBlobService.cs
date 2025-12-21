@@ -16,7 +16,10 @@ namespace Blob.Application.Interfaces
 
         public Task RenameFileAsync(string containerName, string fileName, string newFileName);
 
+        //-----------------------------------------
 
         public Task RemoveBucketAsync(string bucketName);
+
+        public Task AddBucketAsync(string bucketName);
     }
 }

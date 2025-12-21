@@ -23,14 +23,6 @@ namespace Blob.Infrastructure.Services
             bool exists = await _minio.BucketExistsAsync(
                 new BucketExistsArgs().WithBucket(fileDto.BucketName));
 
-            if (!exists)
-            {
-                await _minio.MakeBucketAsync(
-                    new MakeBucketArgs()
-                        .WithBucket(fileDto.BucketName)
-                );
-            }
-
 
             using (fileDto.Stream)
             {
@@ -46,7 +38,6 @@ namespace Blob.Infrastructure.Services
 
 
         }
-
 
         public async Task DeleteFileAsync(string containerName, string fileName)
         {
@@ -124,7 +115,6 @@ namespace Blob.Infrastructure.Services
             return (ms, stat.ContentType);
         }
       
-
         public async Task RenameFileAsync(string containerName, string fileName, string newFileName)
         {
             await _minio.CopyObjectAsync(
@@ -145,7 +135,7 @@ namespace Blob.Infrastructure.Services
              );
         }
 
-
+        //-----------------------------------------------------------------------------
         public async Task RemoveBucketAsync(string containerName)
         {
             var result = new List<string>();
@@ -167,7 +157,16 @@ namespace Blob.Infrastructure.Services
 
         }
 
+        public async Task AddBucketAsync(string bucketName)
+        {
+            bool exists = await _minio.BucketExistsAsync(
+              new BucketExistsArgs().WithBucket(bucketName));
+            if (exists)
+                throw new ConflictException("Bucket вже існує");
 
+            await _minio.MakeBucketAsync(new MakeBucketArgs().WithBucket(bucketName));             
+            
+        }
 
     }
 }

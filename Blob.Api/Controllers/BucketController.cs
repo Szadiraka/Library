@@ -1,5 +1,8 @@
-﻿using Blob.Application.Dtos;
+﻿using Blob.Api.Mappers;
+using Blob.Application.Dtos;
+using Blob.Application.Exceptions;
 using Blob.Application.Interfaces;
+using Blob.Domain.Entities;
 using Blob.Domain.Queries;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,8 +24,9 @@ namespace Blob.Api.Controllers
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetBucketById( Guid id)
         {
-            var result = await _service.GetBucketByIdAsync(id);
-            return Ok(new ApiResponse<BucketDto> { Message = "Backet отримано", Data = result });
+            Bucket result = await _service.GetBucketByIdAsync(id);
+            BucketDto bucketDto = BucketMapper.ToDto(result);
+            return Ok(new ApiResponse<BucketDto> { Message = "Backet отримано", Data = bucketDto });
         }
 
 
@@ -33,7 +37,10 @@ namespace Blob.Api.Controllers
                 return BadRequest(new ApiResponse<object> { Message = "Не коректний запит" });
 
             var buckets = await _service.GetAllBucketsAsync(query);
-            return Ok(new ApiResponse<List<BucketDto>> { Message = "Buckets отримано", Data = buckets });
+
+            List<BucketDto> dtos = BucketMapper.ToDtoList(buckets);
+
+            return Ok(new ApiResponse<List<BucketDto>> { Message = "Buckets отримано", Data = dtos });
         }
 
         [HttpPut("rename/{id:guid}")]
@@ -44,9 +51,14 @@ namespace Blob.Api.Controllers
         }
 
         [HttpPost("add")]
-        public async Task<IActionResult> AddBucket ([FromQuery] string name)
+        public async Task<IActionResult> AddBucket ([FromBody] BucketDto bucketDto)
         {
-            await _service.AddBucketAsync(name);
+            if(!ModelState.IsValid)
+                throw new _ValidationException("Невалідні дані");
+
+            Bucket bucket = BucketMapper.ToEntity(bucketDto);
+            bucket.StorageName = bucketDto.Name;
+            await _service.AddBucketAsync(bucket);
             return Ok(new ApiResponse<object> { Message = "bucket додано" });
         }
 
@@ -56,14 +68,6 @@ namespace Blob.Api.Controllers
             await _service.DeleteBucketAsync(id);
             return Ok(new ApiResponse<object> { Message = "Bucket видалено" });
         }
-
-
-
-
-
-
-
-
 
 
     }

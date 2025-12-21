@@ -7,9 +7,9 @@ namespace Blob.Application.Interfaces
 {
     public interface IFileMetaDataService
     {
-        public Task<BucketDto> GetBucketByIdAsync(Guid id);
+        public Task<Bucket> GetBucketByIdAsync(Guid id);
 
-        public Task<List<BucketDto>> GetAllBucketsAsync(BucketQuery query);
+        public Task<List<Bucket>> GetAllBucketsAsync(BucketQuery query);
 
         public Task RenameBucketNameAsync(Guid id, string newName);
 

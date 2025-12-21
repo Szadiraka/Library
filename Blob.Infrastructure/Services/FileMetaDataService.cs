@@ -1,5 +1,4 @@
 ﻿
-
 using Blob.Application.Dtos;
 using Blob.Application.Exceptions;
 using Blob.Application.Interfaces;
@@ -20,53 +19,42 @@ namespace Blob.Infrastructure.Services
             _blobService = blobService;
         }
 
-
         public async Task AddBucketAsync(Bucket bucket)
-        {
-            //проверить существует ли бакет с таким именем если существует то выбросить исключение
+        {        
             if(await _dbService.ExistBucket(bucket.Name))
                 throw new BusinessRuleException("Бакет с такою назвою вже існує");
 
-
-            // если такого нет, добавляем в minIO и есил все хорошо то добавляем в БД
-            //?????????????????????????
-
+            await _blobService.AddBucketAsync(bucket.Name);
 
             await _dbService.CreateBucket(bucket);
         }
 
         public async Task DeleteBucketAsync(Guid id)
         {
-            if (!await _dbService.ExistBucket(id))
-                throw new NotFoundException("Бакет с такою назвою не існує");
-       
+            Bucket bucket = await _dbService.GetBucketById(id);              
 
-            // если все хорошо то удаляем бакет
+            if( !await _dbService.BucketIsEmpty(id))
+                throw new BusinessRuleException("Бакет не порожній, ви не можете його видалити");       
 
-            //???????????????????
+             await _blobService.RemoveBucketAsync(bucket.StorageName);
 
-            // удаляем бакет из БД
-            await _dbService.DeleteBucket(id);
+             await _dbService.DeleteBucket(bucket);
            
         }
 
-        public async Task<List<BucketDto>> GetAllBucketsAsync(BucketQuery query)
+        public async Task<List<Bucket>> GetAllBucketsAsync(BucketQuery query)
         {
-            var result = await _dbService.GetBuckets(query);
+            var result = await _dbService.GetBuckets(query);          
 
-            //преобразовать тип данных и вернуть нужный тип
-
-            throw new NotImplementedException();
+            return result;
         }
 
-        public async Task<BucketDto> GetBucketByIdAsync(Guid id)
+        public async Task<Bucket> GetBucketByIdAsync(Guid id)
         {
-            if (!await _dbService.ExistBucket(id))
-                throw new NotFoundException("Бакет с таким id не існує");
+            Bucket bucket = await _dbService.GetBucketById(id);             
 
-            //получить guid файла и  сделать запрос в minIO
-
-            throw new NotImplementedException();
+           return bucket;
+           
         }
 
         public async Task RenameBucketNameAsync(Guid id, string newName)

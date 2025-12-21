@@ -13,7 +13,7 @@ namespace Blob.Application.Interfaces
 
         Task<bool> ExistBucket(string name);
 
-        Task DeleteBucket(Guid bucketId);
+        Task DeleteBucket(Bucket bucket);
 
         Task CreateBucket(Bucket bucket);
 
@@ -22,5 +22,7 @@ namespace Blob.Application.Interfaces
         Task<Bucket> GetBucketById(Guid bucketId);
 
         Task<List<Bucket>> GetBuckets(BucketQuery query);
+
+        Task<bool> BucketIsEmpty(Guid bucketId);
     }
 }

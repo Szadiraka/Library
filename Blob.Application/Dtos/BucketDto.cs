@@ -10,7 +10,7 @@ namespace Blob.Application.Dtos
         [Required]
         public string Name { get; set; } = string.Empty;
 
-        public DateTimeOffset CreatedAt { get; set; } = new DateTimeOffset(DateTime.UtcNow);
+        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
       
         public DateTimeOffset? UpdatedAt { get; set; }
 

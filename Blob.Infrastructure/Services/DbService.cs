@@ -15,7 +15,7 @@ namespace Blob.Infrastructure.Services
         {
             _context = context;
         }
-
+    
 
         public async Task CreateBucket(Bucket bucket)
         {
@@ -24,11 +24,8 @@ namespace Blob.Infrastructure.Services
            
         }       
 
-        public async Task DeleteBucket(Guid bucketId)
+        public async Task DeleteBucket(Bucket bucket)
         {
-            var bucket = await _context.Buckets.FirstOrDefaultAsync(x=>x.Id == bucketId);
-            if (bucket == null) 
-                throw new NotFoundException("Bucket не знайдено");
             _context.Buckets.Remove(bucket);
             await _context.SaveChangesAsync();
         }
@@ -41,7 +38,7 @@ namespace Blob.Infrastructure.Services
         public async Task<bool> ExistBucket(string name)
         {         
             return await _context.Buckets
-                 .AnyAsync(x => x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+                 .AnyAsync(x => x.Name.ToUpper()== name.ToUpper());
 
         }
 
@@ -59,7 +56,7 @@ namespace Blob.Infrastructure.Services
             var query = _context.Buckets.AsQueryable();
 
              if(bucketQuery.Title != null)
-                query = query.Where(x => x.Name == bucketQuery.Title);
+                query = query.Where(x => x.Name.ToUpper().Contains(bucketQuery.Title.ToUpper()));
 
              if(bucketQuery.CreatedAfter != null)
                 query = query.Where(x => x.CreatedAt >= bucketQuery.CreatedAfter);
@@ -78,10 +75,16 @@ namespace Blob.Infrastructure.Services
                 throw new NotFoundException("Bucket не знайдено");
 
             bucket.Name = newName;
-            await _context.Buckets.AddAsync(bucket);
+            bucket.UpdatedAt = DateTimeOffset.Now;
+            _context.Buckets.Update(bucket);
             await _context.SaveChangesAsync();
         }
 
-       
+        public async Task<bool> BucketIsEmpty(Guid bucketId)
+        {
+            return !await _context.Files.AnyAsync(x=>x.BucketId == bucketId);
+        }
+
+
     }
 }
