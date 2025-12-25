@@ -1,20 +1,21 @@
 ﻿
 using Blob.Application.Dtos;
+using Blob.Domain.Entities;
 
 namespace Blob.Application.Interfaces
 {
     public  interface IBlobService
     {
 
-        public Task<List<string>> GetAllFilesAsync(string containerName);
+        //public Task<List<string>> GetAllFilesAsync(string containerName);
 
-        public Task<(MemoryStream,string)> GetFileAsync(string containerName, string fileName);
+        public Task<MemoryStream> GetFileAsync(string containerName, string fileName);
 
-        public Task AddFileAsync(FileDto fileDto);
+        public Task AddFileAsync(FileMetaData file);
 
         public Task DeleteFileAsync(string containerName, string fileName);
 
-        public Task RenameFileAsync(string containerName, string fileName, string newFileName);
+        //public Task RenameFileAsync(string containerName, string fileName, string newFileName);
 
         //-----------------------------------------
 

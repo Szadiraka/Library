@@ -2,6 +2,7 @@
 using Blob.Application.Dtos;
 using Blob.Application.Exceptions;
 using Blob.Application.Interfaces;
+using Blob.Domain.Entities;
 using Minio;
 using Minio.DataModel.Args;
 
@@ -18,20 +19,20 @@ namespace Blob.Infrastructure.Services
 
         }
 
-        public async Task AddFileAsync(FileDto fileDto)
+        public async Task AddFileAsync(FileMetaData file)
         {
             bool exists = await _minio.BucketExistsAsync(
-                new BucketExistsArgs().WithBucket(fileDto.BucketName));
+                new BucketExistsArgs().WithBucket(file.Bucket!.Name));
 
 
-            using (fileDto.Stream)
+            using (file.Stream)
             {
                 await _minio.PutObjectAsync(new PutObjectArgs()
-               .WithBucket(fileDto.BucketName)
-               .WithObject(fileDto.FileName)
-               .WithStreamData(fileDto.Stream)
-               .WithObjectSize(fileDto.Length)
-               .WithContentType(fileDto.ContentType)
+               .WithBucket(file.Bucket.Name)
+               .WithObject(file.StorageName)
+               .WithStreamData(file.Stream)
+               .WithObjectSize(file.Size)
+               .WithContentType(file.ContentType)
                 );
             }
 
@@ -69,23 +70,23 @@ namespace Blob.Infrastructure.Services
 
         }
 
-        public async Task<List<string>> GetAllFilesAsync(string containerName)
-        {
-            var result = new List<string>();
+        //public async Task<List<string>> GetAllFilesAsync(string containerName)
+        //{
+        //    var result = new List<string>();
 
-            var objects = _minio.ListObjectsEnumAsync(
-                new ListObjectsArgs()
-               .WithBucket(containerName)
-               .WithRecursive(true));
+        //    var objects = _minio.ListObjectsEnumAsync(
+        //        new ListObjectsArgs()
+        //       .WithBucket(containerName)
+        //       .WithRecursive(true));
 
-            await foreach (var item in objects)
-            {
-                result.Add(item.Key);
-            }
-            return result;
-        }
+        //    await foreach (var item in objects)
+        //    {
+        //        result.Add(item.Key);
+        //    }
+        //    return result;
+        //}
 
-        public async Task<(MemoryStream, string)> GetFileAsync(string containerName, string fileName)
+        public async Task<MemoryStream> GetFileAsync(string containerName, string fileName)
         {
             bool exists = await _minio.BucketExistsAsync(
                new BucketExistsArgs().WithBucket(containerName));
@@ -104,38 +105,39 @@ namespace Blob.Infrastructure.Services
             ms.Position = 0;
 
 
-            var stat = await _minio.StatObjectAsync(
-                new StatObjectArgs()
-                .WithBucket(containerName)
-                .WithObject(fileName)
-              );
+            //var stat = await _minio.StatObjectAsync(
+            //    new StatObjectArgs()
+            //    .WithBucket(containerName)
+            //    .WithObject(fileName)
+            //  );
 
+            return ms;
 
-
-            return (ms, stat.ContentType);
+            //return (ms, stat.ContentType);
         }
       
-        public async Task RenameFileAsync(string containerName, string fileName, string newFileName)
-        {
-            await _minio.CopyObjectAsync(
-                new CopyObjectArgs()
-                .WithBucket(containerName)
-                .WithObject(newFileName)
-                .WithCopyObjectSource(
-                    new CopySourceObjectArgs()
-                    .WithBucket(containerName)
-                    .WithObject(fileName))
-             );
+        //public async Task RenameFileAsync(string containerName, string fileName, string newFileName)
+        //{
+        //    await _minio.CopyObjectAsync(
+        //        new CopyObjectArgs()
+        //        .WithBucket(containerName)
+        //        .WithObject(newFileName)
+        //        .WithCopyObjectSource(
+        //            new CopySourceObjectArgs()
+        //            .WithBucket(containerName)
+        //            .WithObject(fileName))
+        //     );
 
-            await _minio.RemoveObjectAsync(
-                new RemoveObjectArgs()
-                .WithBucket(containerName)
-                .WithObject(fileName)
+        //    await _minio.RemoveObjectAsync(
+        //        new RemoveObjectArgs()
+        //        .WithBucket(containerName)
+        //        .WithObject(fileName)
 
-             );
-        }
+        //     );
+        //}
 
         //-----------------------------------------------------------------------------
+       
         public async Task RemoveBucketAsync(string containerName)
         {
             var result = new List<string>();

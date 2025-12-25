@@ -1,5 +1,6 @@
 ﻿
 
+using Blob.Application.Dtos;
 using Blob.Domain.Entities;
 using Blob.Domain.Queries;
 
@@ -24,5 +25,22 @@ namespace Blob.Application.Interfaces
         Task<List<Bucket>> GetBuckets(BucketQuery query);
 
         Task<bool> BucketIsEmpty(Guid bucketId);
+
+        //--------------------------------------
+
+        Task DeleteFile(Guid id);        
+
+        Task CreateFile(FileMetaData file);
+
+        Task UpdateFile(Guid id, string newName);
+
+        Task<FileMetaData> GetFileById(Guid id);
+
+        Task<PagedResult<FileMetaData>> GetFiles(FileQuery filter);
+
+        Task MakeActiveFile(Guid id);
+
+        Task<List<FileMetaData>> GetAllFilesByName(string name);
+
     }
 }

@@ -11,6 +11,8 @@ namespace Blob.Domain.Entities
 
         public string StorageName { get; set; } = string.Empty; 
 
+        public Stream? Stream { get; set; }
+
         public long Size { get; set; }
 
         public string ContentType { get; set; } = string.Empty;

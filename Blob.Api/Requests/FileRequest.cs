@@ -5,13 +5,17 @@ namespace Blob.Api.Requests
     public class FileRequest
     {
       
-            [Required(ErrorMessage = "BucketName is required")]
-            public string BucketName { get; set; } = string.Empty;
+            [Required]
+            public Guid BucketId { get; set; }
 
-            public string? FileName { get; set; }
+            public string? OriginalName { get; set; }
 
-            [Required(ErrorMessage = "File is required")]
+            [Required]
             public IFormFile? File { get; set; }
+
+            public Guid? BookId { get; set; }
+
+            public int? Version { get; set; }
         
     }
 }
